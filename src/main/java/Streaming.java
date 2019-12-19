@@ -30,8 +30,9 @@ public class Streaming {
         conf.set("es.resource", "sparkstreaming");
         conf.set("es.nodes.wan.only", "true");
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
-        JavaDStream<String> stream = ssc.textFileStream("/home/vanessa/Masterarbeit/workdir/sequences");
-        JavaDStream<String> fastq = (JavaDStream<String>) stream.map(new ReadFastq()).filter(x -> x!=null);
+        //JavaDStream<String> stream = ssc.textFileStream("/home/vanessa/Masterarbeit/workdir/sequences");
+        JavaDStream<String> stream = ssc.textFileStream("/vol/MA_Data/sequences");
+        JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
         JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
         JavaDStream<String> savedReads = reads.transform(new SaveToElastic()).map(new ToFasta());
         savedReads.cache();
