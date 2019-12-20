@@ -21,7 +21,7 @@ public class Streaming {
 
     public static void main(String[] args) throws InterruptedException {
 
-        SparkConf conf = new SparkConf().setAppName("fileStreaming").setMaster("local[2]");
+        SparkConf conf = new SparkConf().setAppName("fileStreaming").setMaster("local[*]");
         conf.set("es.index.auto.create", "true");
         conf.set("es.nodes", "localhost");
         conf.set("es.port", "9200");
