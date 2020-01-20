@@ -17,7 +17,7 @@ public class PipeToBlast implements Function<JavaRDD<String>, JavaRDD<String>> {
     public JavaRDD<String> call(JavaRDD<String> read) throws Exception {
 
         //String blastCall = "blastn -db /home/vanessa/Masterarbeit/workdir/amrtest -outfmt 15";
-        String blastCall = "blastn -db /vol/MA_Data/nt_db/nt_v5 -outfmt 15";
+        String blastCall = "blastn -db /vol/MA_Data/nt_db/nt_v5 -outfmt 15 -num_threads 5";
         JavaRDD<String> pipeRDD = read.pipe(blastCall);
         pipeRDD.collect();
         return pipeRDD;
