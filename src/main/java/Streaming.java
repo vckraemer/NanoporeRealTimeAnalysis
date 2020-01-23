@@ -41,7 +41,7 @@ public class Streaming {
         //results.cache();
         //results.print();
         //results.dstream().saveAsTextFiles("file:///home/vanessa/Masterarbeit/workdir/test", "txt");
-        JavaEsSparkStreaming.saveJsonToEs(results, "sparkblastresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title"));
+        JavaEsSparkStreaming.saveJsonToEs(results, "sparkblastresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq, hseq, midline"));
         //JavaEsSparkStreaming.saveToEs(readsblast, "sparkstreaming");
 
         ssc.start();
