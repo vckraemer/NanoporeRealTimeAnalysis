@@ -1,6 +1,7 @@
 import MapFunctions.*;
 import Model.Read;
 import TransformFunctions.PipeToBlast;
+import TransformFunctions.PipeToBlastX;
 import TransformFunctions.SaveToElastic;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
@@ -35,13 +36,14 @@ public class Streaming {
         JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
         JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
         JavaDStream<String> savedReads = reads.transform(new SaveToElastic()).map(new ToFasta());
-        //savedReads.cache();
-        JavaDStream<String> results = savedReads.transform(new PipeToBlast()).map(new GetBlastResultJsonSingleReport()).filter(x -> x!=null);
-
+        savedReads.cache();
+        //JavaDStream<String> blastResults = savedReads.transform(new PipeToBlast()).map(new GetBlastResultJsonSingleReport()).filter(x -> x!=null);
+        JavaDStream<String> blastxResults = savedReads.transform(new PipeToBlastX()).map(new GetBlastResultJsonSingleReport()).filter(x -> x!=null);
         //results.cache();
         //results.print();
         //results.dstream().saveAsTextFiles("file:///home/vanessa/Masterarbeit/workdir/test", "txt");
-        JavaEsSparkStreaming.saveJsonToEs(results, "sparkblastresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq, hseq, midline"));
+        //JavaEsSparkStreaming.saveJsonToEs(blastResults, "sparkblastresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq, hseq, midline"));
+        JavaEsSparkStreaming.saveJsonToEs(blastxResults, "sparkblastxresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq, hseq, midline"));
         //JavaEsSparkStreaming.saveToEs(readsblast, "sparkstreaming");
 
         ssc.start();
