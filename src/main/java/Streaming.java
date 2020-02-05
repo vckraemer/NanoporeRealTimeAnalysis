@@ -43,7 +43,8 @@ public class Streaming {
         //results.print();
         //results.dstream().saveAsTextFiles("file:///home/vanessa/Masterarbeit/workdir/test", "txt");
         //JavaEsSparkStreaming.saveJsonToEs(blastResults, "sparkblastresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq, hseq, midline"));
-        JavaEsSparkStreaming.saveJsonToEs(blastxResults, "sparkblastxresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq, hseq, midline"));
+        //JavaEsSparkStreaming.saveJsonToEs(blastxResults, "sparkblastxresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq, hseq, midline"));
+        JavaEsSparkStreaming.saveJsonToEs(blastxResults, "sparkblastxresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq"));
         //JavaEsSparkStreaming.saveToEs(readsblast, "sparkstreaming");
 
         ssc.start();
