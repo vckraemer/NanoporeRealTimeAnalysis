@@ -32,7 +32,7 @@ public class Streaming {
         conf.set("es.resource", "sparkstreaming");
         conf.set("es.nodes.wan.only", "true");
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
-        JavaDStream<String> stream = ssc.textFileStream("/vol/MA_Data/sequences");
+        JavaDStream<String> stream = ssc.textFileStream("/vol/Ma_Data/sequences");
         stream.print();
         //JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
         //metamapsresults.print();
