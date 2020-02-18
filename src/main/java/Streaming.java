@@ -33,8 +33,9 @@ public class Streaming {
         conf.set("es.nodes.wan.only", "true");
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
         JavaDStream<String> stream = ssc.textFileStream("/vol/MA_Data/sequences");
-        JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
-        metamapsresults.print();
+        stream.print();
+        //JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
+        //metamapsresults.print();
         //JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
         //JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
         //JavaDStream<String> savedReads = reads.transform(new SaveToElastic()).map(new ToFasta());
