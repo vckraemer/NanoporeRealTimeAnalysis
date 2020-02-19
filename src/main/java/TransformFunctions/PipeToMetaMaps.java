@@ -10,9 +10,10 @@ public class PipeToMetaMaps implements Function<JavaRDD<String>, JavaRDD<String>
 
         String debug = read.toDebugString();
         String[] debugParts = debug.split("\\|");
-        String[] pathParts = debugParts[debugParts.length-1].split(" ")[2].replace("file:", "").split("/");
+        String path = debugParts[debugParts.length-1].split(" ")[2].replace("file:", "");
+        String[] pathParts = path.split("/");
         String filename = pathParts[pathParts.length-1];
-        String script = "bash /vol/Ma_Data_new/MetaMapsWrapper.sh " + filename;
+        String script = "bash /vol/Ma_Data_new/MetaMapsWrapper.sh " + filename + " " + path;
         JavaRDD<String> pipeRDD = read.pipe(script);
         pipeRDD.collect();
 
