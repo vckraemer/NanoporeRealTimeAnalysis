@@ -43,7 +43,7 @@ public class Streaming {
         JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
         JavaDStream<String> savedReads = reads.map(new ToFasta());
         JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
-        lastResults.map(new GetLastResults()).filter(x -> x!=null).transform(new SaveLastResultsToElastic());
+        JavaDStream<LastResult> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null).transform(new SaveLastResultsToElastic());
         //lastResults.print();
         //lastResults.dstream().saveAsTextFiles("/vol/Ma_Data_new/lasttestresults", "txt");
 
