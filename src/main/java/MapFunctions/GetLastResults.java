@@ -30,7 +30,7 @@ public class GetLastResults implements Function<String, LastResult> {
             result.setReferenceEnd(Integer.parseInt(fields[9]));
             result.seteValue(fields[10]);
             result.setBitScore(Double.parseDouble(fields[11]));
-
+            System.out.println(result.getQueryName());
             return result;
         }
         else {
