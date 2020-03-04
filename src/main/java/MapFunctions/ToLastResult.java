@@ -10,7 +10,7 @@ public class ToLastResult implements Function<String, LastResult> {
 
         String[] fields = s.split("\t");
 
-        double pI =  Double.parseDouble(fields[2]);
+        float pI =  Float.parseFloat(fields[2]);
         int al = Integer.parseInt(fields[3]);
         int mm = Integer.parseInt(fields[4]);
         int go = Integer.parseInt(fields[5]);
@@ -18,7 +18,7 @@ public class ToLastResult implements Function<String, LastResult> {
         int qe = Integer.parseInt(fields[7]);
         int rs = Integer.parseInt(fields[8]);
         int re = Integer.parseInt(fields[9]);
-        double bs = Double.parseDouble(fields[11]);
+        float bs = Float.parseFloat(fields[11]);
 
         if(fields.length==12) {
             return new LastResult(fields[0], fields[1], pI, al, mm, go, qs, qe, rs, re, fields[10], bs);

@@ -6,7 +6,7 @@ public class LastResult implements Serializable {
 
     private String queryName;
     private String referenceName;
-    private double percentIdentity;
+    private float percentIdentity;
     private int alignmentLength;
     private int mismatches;
     private int gapOpens;
@@ -15,9 +15,9 @@ public class LastResult implements Serializable {
     private int referenceStart;
     private int referenceEnd;
     private String eValue;
-    private double bitScore;
+    private float bitScore;
 
-    public LastResult(String queryName, String referenceName, double percentIdentity, int alignmentLength, int mismatches, int gapOpens, int queryStart, int queryEnd, int referenceStart, int referenceEnd, String eValue, double bitScore) {
+    public LastResult(String queryName, String referenceName, float percentIdentity, int alignmentLength, int mismatches, int gapOpens, int queryStart, int queryEnd, int referenceStart, int referenceEnd, String eValue, float bitScore) {
         this.queryName = queryName;
         this.referenceName = referenceName;
         this.percentIdentity = percentIdentity;
@@ -52,11 +52,11 @@ public class LastResult implements Serializable {
         this.referenceName = referenceName;
     }
 
-    public double getPercentIdentity() {
+    public float getPercentIdentity() {
         return percentIdentity;
     }
 
-    public void setPercentIdentity(double percentIdentity) {
+    public void setPercentIdentity(float percentIdentity) {
         this.percentIdentity = percentIdentity;
     }
 
@@ -124,11 +124,11 @@ public class LastResult implements Serializable {
         this.eValue = eValue;
     }
 
-    public double getBitScore() {
+    public float getBitScore() {
         return bitScore;
     }
 
-    public void setBitScore(double bitScore) {
+    public void setBitScore(float bitScore) {
         this.bitScore = bitScore;
     }
 }
