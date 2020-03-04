@@ -51,7 +51,7 @@ public class Streaming {
         //ImmutableMap.of("es.mapping.id","queryName")
         //resultStream.print();
         //lastResults.print();
-        resultStream.dstream().saveAsTextFiles("/vol/Ma_Data_new/lasttestresults", "txt");
+        lastResults.dstream().saveAsTextFiles("/vol/Ma_Data_new/lasttestresults", "txt");
 
         //JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
         //JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
