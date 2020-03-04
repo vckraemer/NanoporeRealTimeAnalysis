@@ -43,11 +43,15 @@ public class Streaming {
         JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
         JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
         JavaDStream<String> savedReads = reads.map(new ToFasta());
-        JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
-        JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
-        JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult());
 
-        JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
+        JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
+        centrifugeResults.print();
+
+//        JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
+//        JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
+//        JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult());
+//        JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
+
         //ImmutableMap.of("es.mapping.id","queryName")
         //resultStream.print();
         //lastResults.print();
