@@ -14,6 +14,7 @@ public class PipeToLast implements Function<JavaRDD<String>, JavaRDD<String>> {
 
         JavaRDD<String> pipeRDD = read.pipe(lastCall);
         pipeRDD.collect();
+
         return pipeRDD;
     }
 
