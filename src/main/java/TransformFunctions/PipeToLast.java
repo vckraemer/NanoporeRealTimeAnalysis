@@ -10,6 +10,8 @@ public class PipeToLast implements Function<JavaRDD<String>, JavaRDD<String>> {
 
         //fasta input
         String lastCall = "lastal -F15 /vol/Ma_Data_new/argdb/argdb -f BlastTab";
+        //String lastCall = "lastal -F15 /home/vanessa/Masterarbeit/workdir/lastdb/argdb -f BlastTab";
+
         JavaRDD<String> pipeRDD = read.pipe(lastCall);
         pipeRDD.collect();
         return pipeRDD;

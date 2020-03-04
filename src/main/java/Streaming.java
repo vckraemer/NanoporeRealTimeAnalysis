@@ -31,6 +31,7 @@ public class Streaming {
         conf.set("es.nodes.wan.only", "true");
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
         JavaDStream<String> stream = ssc.textFileStream("/vol/Ma_Data/sequences");
+        //JavaDStream<String> stream = ssc.textFileStream("/home/vanessa/Masterarbeit/workdir/sequences/");
 
 
         //JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
@@ -43,8 +44,10 @@ public class Streaming {
         JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
         JavaDStream<String> savedReads = reads.map(new ToFasta());
         JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
-        JavaDStream<LastResult> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
+        JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
+        JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult());
         JavaEsSparkStreaming.saveToEs(resultStream, "lastresults", ImmutableMap.of("es.mapping.id","queryName"));
+        //endResults.print();
         //lastResults.print();
         //lastResults.dstream().saveAsTextFiles("/vol/Ma_Data_new/lasttestresults", "txt");
 

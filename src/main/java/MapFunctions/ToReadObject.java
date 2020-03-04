@@ -4,6 +4,7 @@ import Model.Read;
 import org.apache.spark.api.java.function.Function;
 
 public class ToReadObject implements Function<String, Read> {
+
     @Override
     public Read call(String s) throws Exception {
 

@@ -1,6 +1,8 @@
 package Model;
 
-public class LastResult {
+import java.io.Serializable;
+
+public class LastResult implements Serializable {
 
     private String queryName;
     private String referenceName;
@@ -14,6 +16,21 @@ public class LastResult {
     private int referenceEnd;
     private String eValue;
     private double bitScore;
+
+    public LastResult(String queryName, String referenceName, double percentIdentity, int alignmentLength, int mismatches, int gapOpens, int queryStart, int queryEnd, int referenceStart, int referenceEnd, String eValue, double bitScore) {
+        this.queryName = queryName;
+        this.referenceName = referenceName;
+        this.percentIdentity = percentIdentity;
+        this.alignmentLength = alignmentLength;
+        this.mismatches = mismatches;
+        this.gapOpens = gapOpens;
+        this.queryStart = queryStart;
+        this.queryEnd = queryEnd;
+        this.referenceStart = referenceStart;
+        this.referenceEnd = referenceEnd;
+        this.eValue = eValue;
+        this.bitScore = bitScore;
+    }
 
     public LastResult(){
 
