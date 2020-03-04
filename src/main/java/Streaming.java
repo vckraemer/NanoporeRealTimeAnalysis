@@ -46,6 +46,7 @@ public class Streaming {
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         centrifugeResults.print();
+        centrifugeResults.dstream().saveAsTextFiles("/vol/Ma_Data_new/centrifugeresults", "txt");
 
 //        JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
 //        JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
