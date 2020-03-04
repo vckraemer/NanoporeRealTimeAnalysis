@@ -44,6 +44,7 @@ public class Streaming {
         JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
         JavaDStream<String> savedReads = reads.map(new ToFasta());
 
+
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         centrifugeResults.print();
         centrifugeResults.dstream().saveAsTextFiles("/vol/Ma_Data_new/centrifugeresults", "txt");
