@@ -46,7 +46,7 @@ public class Streaming {
         JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
         JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
         JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult());
-        JavaEsSparkStreaming.saveToEs(resultStream, "lastresults");
+        JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
         //ImmutableMap.of("es.mapping.id","queryName")
         //endResults.print();
         //lastResults.print();
