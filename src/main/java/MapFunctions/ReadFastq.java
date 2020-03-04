@@ -10,7 +10,7 @@ public class ReadFastq implements Function<String, String> {
     @Override
     public String call(String line) throws Exception {
 
-        if(line.contains("@")){
+        if(line.charAt(0)==('@')){
             fastqblock = line;
             lineMark = 1;
             return null;

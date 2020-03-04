@@ -47,11 +47,11 @@ public class Streaming {
         JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
         JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult());
 
-        //JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
+        JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
         //ImmutableMap.of("es.mapping.id","queryName")
         //resultStream.print();
         //lastResults.print();
-        savedReads.dstream().saveAsTextFiles("/vol/Ma_Data_new/lasttestresults", "txt");
+        //savedReads.dstream().saveAsTextFiles("/vol/Ma_Data_new/lasttestresults", "txt");
 
         //JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
         //JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
