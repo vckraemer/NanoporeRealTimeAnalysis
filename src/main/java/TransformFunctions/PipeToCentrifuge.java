@@ -8,8 +8,14 @@ public class PipeToCentrifuge implements Function<JavaRDD<String>, JavaRDD<Strin
     @Override
     public JavaRDD<String> call(JavaRDD<String> read) throws Exception {
 
+        String debug = read.toDebugString();
+        String[] debugParts = debug.split("\\|");
+        String path = debugParts[debugParts.length-1].split(" ")[2].replace("file:", "");
+        String[] pathParts = path.split("/");
+        String filename = pathParts[pathParts.length-1];
+
         //-q fastq input -f fasta input
-        String centrifugeCall = "centrifuge -f -x  /vol/Ma_Data_new/phv/p+h+v";
+        String centrifugeCall = "bash /vol/Ma_Data_new/centrifugeWrapper.sh " + filename;
         JavaRDD<String> pipeRDD = read.pipe(centrifugeCall);
         pipeRDD.collect();
         return pipeRDD;
