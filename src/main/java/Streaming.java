@@ -48,7 +48,7 @@ public class Streaming {
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null);
-        JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults");
+        JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","Id"));
         //centrifugeResults.dstream().saveAsTextFiles("/vol/Ma_Data_new/centrifugeresults", "txt");
 
 //        JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
