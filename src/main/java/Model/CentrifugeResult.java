@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class CentrifugeResult implements Serializable {
 
+    private String Id;
     private String readId;
     private String seqId;
     private String taxID;
@@ -21,7 +22,8 @@ public class CentrifugeResult implements Serializable {
     private String genus;
     private String species;
 
-    public CentrifugeResult(String readId, String seqId, String taxID, float score, float secondBestScore, int hitLength, int queryLength, int numMatches) {
+    public CentrifugeResult(String Id, String readId, String seqId, String taxID, float score, float secondBestScore, int hitLength, int queryLength, int numMatches) {
+        this.Id = Id;
         this.readId = readId;
         this.seqId = seqId;
         this.taxID = taxID;
@@ -30,6 +32,14 @@ public class CentrifugeResult implements Serializable {
         this.hitLength = hitLength;
         this.queryLength = queryLength;
         this.numMatches = numMatches;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
     }
 
     public String getReadId() {

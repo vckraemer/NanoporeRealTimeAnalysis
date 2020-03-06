@@ -13,12 +13,13 @@ public class ToCentrifugeResult implements Function<String, CentrifugeResult> {
 
         if(fields.length==8){
             if(!fields[0].equals("readID")){
+                String id = fields[0]+"_"+fields[1]+"_"+fields[2];
                 float sc = Float.parseFloat(fields[3]);
                 float sBS = Float.parseFloat(fields[4]);
                 int hL = Integer.parseInt(fields[5]);
                 int qL = Integer.parseInt(fields[6]);
                 int nM = Integer.parseInt(fields[7]);
-                return new CentrifugeResult(fields[0], fields[1], fields[2], sc, sBS, hL, qL, nM);
+                return new CentrifugeResult(id, fields[0], fields[1], fields[2], sc, sBS, hL, qL, nM);
             }else
                 return null;
         }else{
