@@ -7,7 +7,7 @@ public class ToTaxonomy2Lineage implements Function<JavaRDD<String>, JavaRDD<Str
     @Override
     public JavaRDD<String> call(JavaRDD<String> taxId) throws Exception {
 
-        String lineage2TaxonomyCall = "bash ./vol/Ma_Data_new/megan_taxon2lineage.pl -db /vol/Ma_Data_new/MetaMaps-master/databases/miniSeq+H/taxonomy/ -f";
+        String lineage2TaxonomyCall = "bash ./vol/Ma_Data_new/megan_taxon2lineage.pl -db /vol/Ma_Data_new/MetaMaps-master/databases/miniSeq+H/taxonomy/ ";
         JavaRDD<String> pipeRDD = taxId.pipe(lineage2TaxonomyCall);
         pipeRDD.collect();
         return pipeRDD;
