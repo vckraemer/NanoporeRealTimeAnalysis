@@ -7,6 +7,5 @@ public class ToLineageInput implements Function<CentrifugeResult, String> {
     @Override
     public String call(CentrifugeResult cr) throws Exception {
 
-        return cr.getId()+ "\t" +cr.getTaxID();
     }
 }
