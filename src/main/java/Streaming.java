@@ -1,6 +1,7 @@
 import MapFunctions.*;
 import Model.CentrifugeResult;
 import Model.LastResult;
+import Model.LineageResults;
 import Model.Read;
 import TransformFunctions.*;
 import org.apache.spark.SparkConf;
@@ -48,8 +49,8 @@ public class Streaming {
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic());
-        JavaDStream<String> lineage = endResult.map(new ToLineageInput()).transform(new ToTaxonomy2Lineage());
-        lineage.print();
+        JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).transform(new ToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
+        JavaEsSparkStreaming.saveToEs(lineage, "lastresults");
 
         //JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
         //lineage.dstream().saveAsTextFiles("/vol/Ma_Data_new/lineageresults", "txt");
