@@ -50,7 +50,7 @@ public class Streaming {
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic());
         JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).transform(new ToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
-        JavaEsSparkStreaming.saveToEs(lineage, "lastresults");
+        JavaEsSparkStreaming.saveToEs(lineage, "lineageresults");
 
         //JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
         //lineage.dstream().saveAsTextFiles("/vol/Ma_Data_new/lineageresults", "txt");
