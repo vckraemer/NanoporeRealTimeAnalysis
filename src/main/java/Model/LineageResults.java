@@ -1,9 +1,11 @@
 package Model;
 
-public class LineageResults {
+import java.io.Serializable;
 
-    private String Id;
-    private String taxId;
+public class LineageResults implements Serializable {
+
+    private String id;
+    private String taxnum;
     private String domain;
     private String kingdom;
     private String phylum;
@@ -14,8 +16,8 @@ public class LineageResults {
     private String species;
 
     public LineageResults(String id, String taxId, String domain, String kingdom, String phylum, String tclass, String order, String family, String genus, String species) {
-        this.Id = id;
-        this.taxId = taxId;
+        this.id = id;
+        this.taxnum = taxId;
         this.domain = domain;
         this.kingdom = kingdom;
         this.phylum = phylum;
@@ -24,6 +26,22 @@ public class LineageResults {
         this.family = family;
         this.genus = genus;
         this.species = species;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTaxnum() {
+        return taxnum;
+    }
+
+    public void setTaxnum(String taxnum) {
+        this.taxnum = taxnum;
     }
 
     public String getDomain() {

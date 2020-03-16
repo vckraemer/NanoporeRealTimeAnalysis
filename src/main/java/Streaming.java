@@ -32,8 +32,8 @@ public class Streaming {
         conf.set("es.resource", "sparkstreaming");
         conf.set("es.nodes.wan.only", "true");
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
-        JavaDStream<String> stream = ssc.textFileStream("/vol/Ma_Data/sequences");
-        //JavaDStream<String> stream = ssc.textFileStream("/home/vanessa/Masterarbeit/workdir/sequences/");
+        //JavaDStream<String> stream = ssc.textFileStream("/vol/Ma_Data/sequences");
+        JavaDStream<String> stream = ssc.textFileStream("/home/vanessa/Masterarbeit/workdir/sequences/");
 
 
         //JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
@@ -49,8 +49,9 @@ public class Streaming {
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic());
-        JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).transform(new ToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
-        JavaEsSparkStreaming.saveToEs(lineage, "lineageresults");
+        JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).transform(new ToTaxonomy2Lineage()).map(new ToLineageResult());
+        //JavaDStream<LineageResults> lineage = stream.map(new ToLineageInputLocal()).transform(new ToTaxonomy2Lineage()).map(new ToLineageResult());
+        JavaEsSparkStreaming.saveToEs(lineage, "lineageresults", ImmutableMap.of("es.mapping.id","id"));
 
         //JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
         //lineage.dstream().saveAsTextFiles("/vol/Ma_Data_new/lineageresults", "txt");
