@@ -44,8 +44,8 @@ public class Streaming {
 
         JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
         JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic());
-        JavaDStream<String> savedReads = reads.map(new ToFasta());
-        savedReads.cache();
+        JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
+
         JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
         JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
         JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult()).transform(new SaveLastResultsToElastic());
