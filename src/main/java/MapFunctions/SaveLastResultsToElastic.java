@@ -14,7 +14,7 @@ public class SaveLastResultsToElastic implements Function<JavaRDD<LastResult>, J
     public JavaRDD<LastResult> call(JavaRDD<LastResult> resultRDD) throws Exception {
 
         //JavaEsSpark.saveToEs(readRDD, "sparkstreaming", ImmutableMap.of("es.mapping.id","id","es.mapping.exclude","quality, sequence"));
-        JavaEsSpark.saveToEs(resultRDD, "lastresults", ImmutableMap.of("es.mapping.id","queryName"));
+        JavaEsSpark.saveToEs(resultRDD, "lastresults");
         return resultRDD;
     }
 }

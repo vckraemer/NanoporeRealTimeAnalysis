@@ -43,9 +43,12 @@ public class Streaming {
         //centrifugeResults.print();
 
         JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
-        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
+        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic());
         JavaDStream<String> savedReads = reads.map(new ToFasta());
 
+        JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
+        JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
+        JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult()).transform(new SaveLastResultsToElastic());
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic());
@@ -56,14 +59,9 @@ public class Streaming {
         //JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
         //lineage.dstream().saveAsTextFiles("/vol/Ma_Data_new/lineageresults", "txt");
 
-//        JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
-//        JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
-//        JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult());
-//        JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
 
-        //ImmutableMap.of("es.mapping.id","queryName")
-        //resultStream.print();
-        //lastResults.print();
+        //JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
+
         //savedReads.dstream().saveAsTextFiles("/vol/Ma_Data_new/lasttestresults", "txt");
 
         //JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
