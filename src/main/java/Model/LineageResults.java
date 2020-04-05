@@ -6,26 +6,27 @@ public class LineageResults implements Serializable {
 
     private String id;
     private String taxnum;
-    private String domain;
-    private String kingdom;
+    private String superkingdom;
     private String phylum;
     private String tclass;
     private String order;
     private String family;
     private String genus;
     private String species;
+    private String subspecies;
 
-    public LineageResults(String id, String taxId, String domain, String kingdom, String phylum, String tclass, String order, String family, String genus, String species) {
+
+    public LineageResults(String id, String taxId, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies) {
         this.id = id;
         this.taxnum = taxId;
-        this.domain = domain;
-        this.kingdom = kingdom;
+        this.superkingdom = superkingdom;
         this.phylum = phylum;
         this.tclass = tclass;
         this.order = order;
         this.family = family;
         this.genus = genus;
         this.species = species;
+        this.subspecies = subspecies;
     }
 
     public String getId() {
@@ -42,22 +43,6 @@ public class LineageResults implements Serializable {
 
     public void setTaxnum(String taxnum) {
         this.taxnum = taxnum;
-    }
-
-    public String getDomain() {
-        return domain;
-    }
-
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
-
-    public String getKingdom() {
-        return kingdom;
-    }
-
-    public void setKingdom(String kingdom) {
-        this.kingdom = kingdom;
     }
 
     public String getPhylum() {
@@ -106,5 +91,21 @@ public class LineageResults implements Serializable {
 
     public void setSpecies(String species) {
         this.species = species;
+    }
+
+    public String getSuperkingdom() {
+        return superkingdom;
+    }
+
+    public void setSuperkingdom(String superkingdom) {
+        this.superkingdom = superkingdom;
+    }
+
+    public String getSubspecies() {
+        return subspecies;
+    }
+
+    public void setSubspecies(String subspecies) {
+        this.subspecies = subspecies;
     }
 }

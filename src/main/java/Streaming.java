@@ -5,17 +5,12 @@ import Model.LineageResults;
 import Model.Read;
 import TransformFunctions.*;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.elasticsearch.spark.streaming.api.java.JavaEsSparkStreaming;
 import org.spark_project.guava.collect.ImmutableMap;
-
-import java.util.ArrayList;
 
 public class Streaming {
 
@@ -25,7 +20,7 @@ public class Streaming {
 
         SparkConf conf = new SparkConf().setAppName("fileStreaming").setMaster("local[*]");
         conf.set("es.index.auto.create", "true");
-        conf.set("es.nodes", "localhost");
+        conf.set("es.nodes", "192.168.0.222");
         conf.set("es.port", "9200");
         conf.set("es.net.http.auth.user", "");
         conf.set("es.net.http.auth.pass", "");
@@ -54,7 +49,7 @@ public class Streaming {
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic());
-        JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).transform(new ToTaxonomy2Lineage()).map(new ToLineageResult());
+        JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult());
         //JavaDStream<LineageResults> lineage = stream.map(new ToLineageInputLocal()).transform(new ToTaxonomy2Lineage()).map(new ToLineageResult());
         JavaEsSparkStreaming.saveToEs(lineage, "lineageresults", ImmutableMap.of("es.mapping.id","id"));
 
