@@ -1,0 +1,12 @@
+#!/bin/bash
+
+filename=$1
+savefile=$filename"reads.fasta"
+
+cd /home/ubuntu/vol/spool/tmp_results/
+
+while read LINE; do
+   echo "${LINE}" >> $savefile
+done
+
+centrifuge -f -k 1 -p 8 -x /home/ubuntu/vol/spool/p_compressed+h+v/p_compressed+h+v $savefile
