@@ -26,6 +26,7 @@ public class Streaming {
         if(args.length >=2 && args.length % 2 == 0){
             int i = 0;
             while(i < args.length){
+
                 if(args[i].equals("-ip")){
                     esIp = args[i+1];
                 } else if(args[i].equals("-port")){
@@ -41,7 +42,7 @@ public class Streaming {
             System.out.println("Check Usage");
             System.exit(1);
         }
-        if(folderPath == ""){
+        if(folderPath.equals("")){
             System.out.println("Check Usage");
             System.exit(1);
         }
@@ -63,7 +64,7 @@ public class Streaming {
         //metamapsresults.print();
 
         JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
-        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic());
+        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
 
         JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
@@ -73,7 +74,7 @@ public class Streaming {
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
-        JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult());
+        JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult()).transform(new CleanupFiles());
         JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults", ImmutableMap.of("es.mapping.id","id"));
 
         //JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
