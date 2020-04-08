@@ -1,6 +1,7 @@
 package Model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class CentrifugeResult implements Serializable {
 
@@ -13,7 +14,7 @@ public class CentrifugeResult implements Serializable {
     private int hitLength;
     private int queryLength;
     private int numMatches;
-
+    private Date centrifugeSaveTime;
 
     public CentrifugeResult(String Id, String readId, String seqId, String taxID, float score, float secondBestScore, int hitLength, int queryLength, int numMatches) {
         this.Id = Id;
@@ -25,6 +26,7 @@ public class CentrifugeResult implements Serializable {
         this.hitLength = hitLength;
         this.queryLength = queryLength;
         this.numMatches = numMatches;
+        centrifugeSaveTime = new Date();
     }
 
     public String getId() {
@@ -99,5 +101,11 @@ public class CentrifugeResult implements Serializable {
         this.numMatches = numMatches;
     }
 
+    public Date getCentrifugeSaveTime() {
+        return centrifugeSaveTime;
+    }
 
+    public void setCentrifugeSaveTime(Date centrifugeSaveTime) {
+        this.centrifugeSaveTime = centrifugeSaveTime;
+    }
 }

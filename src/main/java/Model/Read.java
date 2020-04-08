@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Date;
+
 public class Read {
 
     private String id;
@@ -10,6 +12,7 @@ public class Read {
     private int Readlength;
     private String Fasta;
     private String BlastResult;
+    private Date streamingStart;
 
     public Read(){
 
@@ -23,6 +26,15 @@ public class Read {
         Readlength = readlength;
         Fasta = id.replaceFirst("@",">")+"\n" + sequence;
         BlastResult = "";
+        this.streamingStart = new Date();
+    }
+
+    public Date getStreamingStart() {
+        return streamingStart;
+    }
+
+    public void setStreamingStart(Date streamingStart) {
+        this.streamingStart = streamingStart;
     }
 
     public String getBlastResult() { return BlastResult; }

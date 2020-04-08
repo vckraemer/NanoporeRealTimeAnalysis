@@ -1,6 +1,7 @@
 package Model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class LineageResults implements Serializable {
 
@@ -14,7 +15,7 @@ public class LineageResults implements Serializable {
     private String genus;
     private String species;
     private String subspecies;
-
+    private Date lineageSaveTime;
 
     public LineageResults(String id, String taxId, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies) {
         this.id = id;
@@ -27,6 +28,7 @@ public class LineageResults implements Serializable {
         this.genus = genus;
         this.species = species;
         this.subspecies = subspecies;
+        lineageSaveTime = new Date();
     }
 
     public String getId() {
@@ -107,5 +109,13 @@ public class LineageResults implements Serializable {
 
     public void setSubspecies(String subspecies) {
         this.subspecies = subspecies;
+    }
+
+    public Date getLineageSaveTime() {
+        return lineageSaveTime;
+    }
+
+    public void setLineageSaveTime(Date lineageSaveTime) {
+        this.lineageSaveTime = lineageSaveTime;
     }
 }

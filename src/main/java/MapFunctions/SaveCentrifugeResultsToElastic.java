@@ -8,9 +8,15 @@ import org.spark_project.guava.collect.ImmutableMap;
 
 public class SaveCentrifugeResultsToElastic implements Function<JavaRDD<CentrifugeResult>, JavaRDD<CentrifugeResult>> {
 
+    private String esIndexPrefix;
+
+    public SaveCentrifugeResultsToElastic(String esIndexPrefix){
+        this.esIndexPrefix = esIndexPrefix;
+    }
+
     @Override
     public JavaRDD<CentrifugeResult> call(JavaRDD<CentrifugeResult> centrifugeResultJavaRDD) throws Exception {
-        JavaEsSpark.saveToEs(centrifugeResultJavaRDD, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
+        JavaEsSpark.saveToEs(centrifugeResultJavaRDD, esIndexPrefix+"centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
         return centrifugeResultJavaRDD;
     }
 }

@@ -3,6 +3,8 @@ package MapFunctions;
 import Model.Read;
 import org.apache.spark.api.java.function.Function;
 
+import java.util.Date;
+
 public class ToReadObject implements Function<String, Read> {
 
     @Override

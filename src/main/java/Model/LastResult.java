@@ -1,6 +1,7 @@
 package Model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class LastResult implements Serializable {
 
@@ -16,6 +17,7 @@ public class LastResult implements Serializable {
     private int referenceEnd;
     private String eValue;
     private float bitScore;
+    private Date lastSaveTime;
 
     public LastResult(String queryName, String referenceName, float percentIdentity, int alignmentLength, int mismatches, int gapOpens, int queryStart, int queryEnd, int referenceStart, int referenceEnd, String eValue, float bitScore) {
         this.queryName = queryName;
@@ -30,6 +32,7 @@ public class LastResult implements Serializable {
         this.referenceEnd = referenceEnd;
         this.eValue = eValue;
         this.bitScore = bitScore;
+        lastSaveTime = new Date();
     }
 
     public LastResult(){
@@ -130,5 +133,13 @@ public class LastResult implements Serializable {
 
     public void setBitScore(float bitScore) {
         this.bitScore = bitScore;
+    }
+
+    public Date getLastSaveTime() {
+        return lastSaveTime;
+    }
+
+    public void setLastSaveTime(Date lastSaveTime) {
+        this.lastSaveTime = lastSaveTime;
     }
 }

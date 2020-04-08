@@ -18,24 +18,49 @@ public class Streaming {
 
     public static void main(String[] args) throws InterruptedException {
 
+        String esIp = "localhost";
+        String esPort = "9200";
+        String esIndexPrefix = "";
+        String folderPath = "";
+
+        if(args.length >=2 && args.length % 2 == 0){
+            int i = 0;
+            while(i < args.length){
+                if(args[i].equals("-ip")){
+                    esIp = args[i+1];
+                } else if(args[i].equals("-port")){
+                    esPort = args[i+1];
+                } else if(args[i].equals("-prefix")){
+                    esIndexPrefix = args[i+1];
+                } else if(args[i].equals("-f")){
+                    folderPath = args[i+1];
+                }
+                i++;
+            }
+        }else{
+            System.out.println("Check Usage");
+            System.exit(1);
+        }
+        if(folderPath == ""){
+            System.out.println("Check Usage");
+            System.exit(1);
+        }
+
         SparkConf conf = new SparkConf().setAppName("fileStreaming");
         conf.set("es.index.auto.create", "true");
-        conf.set("es.nodes", "192.168.0.222");
-        conf.set("es.port", "9200");
+        conf.set("es.nodes", esIp);
+        conf.set("es.port", esPort);
         conf.set("es.net.http.auth.user", "");
         conf.set("es.net.http.auth.pass", "");
-        conf.set("es.resource", "sparkstreaming");
+        conf.set("es.resource", esIndexPrefix+"sparkstreaming");
         conf.set("es.nodes.wan.only", "true");
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
-        JavaDStream<String> stream = ssc.textFileStream("/vol/spool/sequences");
-        //JavaDStream<String> stream = ssc.textFileStream("/home/vanessa/Masterarbeit/workdir/sequences/");
+        JavaDStream<String> stream = ssc.textFileStream(folderPath);
+        //JavaDStream<String> stream = ssc.textFileStream("/home/vanessa/Masterarbeit/workdir/sequences/");   "/vol/spool/sequences"
 
 
         //JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
         //metamapsresults.print();
-
-        //JavaDStream<String> centrifugeResults = stream.transform(new PipeToCentrifuge());
-        //centrifugeResults.print();
 
         JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
         JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic());
@@ -43,15 +68,13 @@ public class Streaming {
 
         JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
         JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
-        //JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult()).transform(new SaveLastResultsToElastic());
         JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult());
-        JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
+        JavaEsSparkStreaming.saveToEs(endResults, esIndexPrefix+"lastresults");
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
-        JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic());
+        JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
         JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult());
-        //JavaDStream<LineageResults> lineage = stream.map(new ToLineageInputLocal()).transform(new ToTaxonomy2Lineage()).map(new ToLineageResult());
-        JavaEsSparkStreaming.saveToEs(lineage, "lineageresults", ImmutableMap.of("es.mapping.id","id"));
+        JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults", ImmutableMap.of("es.mapping.id","id"));
 
         //JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
         //lineage.dstream().saveAsTextFiles("/vol/Ma_Data_new/lineageresults", "txt");

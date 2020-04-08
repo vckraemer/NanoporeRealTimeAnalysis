@@ -4,6 +4,8 @@ import Model.CentrifugeResult;
 import Model.LastResult;
 import org.apache.spark.api.java.function.Function;
 
+import java.util.ArrayList;
+
 public class ToCentrifugeResult implements Function<String, CentrifugeResult> {
 
     @Override
@@ -20,6 +22,7 @@ public class ToCentrifugeResult implements Function<String, CentrifugeResult> {
                 int qL = Integer.parseInt(fields[6]);
                 int nM = Integer.parseInt(fields[7]);
                 return new CentrifugeResult(id, fields[0], fields[1], fields[2], sc, sBS, hL, qL, nM);
+
             }else
                 return null;
         }else{
