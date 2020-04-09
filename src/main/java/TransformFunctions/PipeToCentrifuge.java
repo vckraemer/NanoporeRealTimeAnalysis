@@ -16,7 +16,6 @@ public class PipeToCentrifuge implements Function<JavaRDD<String>, JavaRDD<Strin
 
         //-q fastq input -f fasta input
         String centrifugeCall = "bash /home/ubuntu/centrifugeWrapper.sh " + filename;
-        //String centrifugeCall = "bash /home/vanessa/Masterarbeit/centrifugeWrapper.sh " + filename;
         JavaRDD<String> pipeRDD = read.pipe(centrifugeCall);
         pipeRDD.collect();
         return pipeRDD;

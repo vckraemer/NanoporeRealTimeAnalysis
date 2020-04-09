@@ -18,8 +18,10 @@ public class CleanupFiles implements Function<JavaRDD<LineageResults>, JavaRDD<L
         String[] pathParts = path.split("/");
         String filename = pathParts[pathParts.length-1];
 
-        Files.deleteIfExists(Paths.get("/vol/spool/tmp_results/"+filename+"reads.fasta"));
-        Files.deleteIfExists(Paths.get("/vol/spool/tmp_results/"+filename+"LineageInput.txt"));
+        String cleanupCall = "bash /vol/spool/cleanupWrapper.sh "+filename;
+
+        JavaRDD<String> pipeRDD = lineageResults.pipe(cleanupCall);
+        pipeRDD.collect();
 
         return lineageResults;
     }
