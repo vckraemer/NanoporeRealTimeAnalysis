@@ -28,7 +28,7 @@ public class GetLastResults implements Function<String, String> {
             result.setQueryEnd(Integer.parseInt(fields[7]));
             result.setReferenceStart(Integer.parseInt(fields[8]));
             result.setReferenceEnd(Integer.parseInt(fields[9]));
-            result.seteValue(fields[10]);
+            result.seteValue(Double.parseDouble(fields[10]));
             //result.setBitScore(Double.parseDouble(fields[11]));
             return s;
         }

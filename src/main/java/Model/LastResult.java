@@ -15,11 +15,11 @@ public class LastResult implements Serializable {
     private int queryEnd;
     private int referenceStart;
     private int referenceEnd;
-    private String eValue;
+    private double eValue;
     private float bitScore;
     private Date lastSaveTime;
 
-    public LastResult(String queryName, String referenceName, float percentIdentity, int alignmentLength, int mismatches, int gapOpens, int queryStart, int queryEnd, int referenceStart, int referenceEnd, String eValue, float bitScore) {
+    public LastResult(String queryName, String referenceName, float percentIdentity, int alignmentLength, int mismatches, int gapOpens, int queryStart, int queryEnd, int referenceStart, int referenceEnd, double eValue, float bitScore) {
         this.queryName = queryName;
         this.referenceName = referenceName;
         this.percentIdentity = percentIdentity;
@@ -119,11 +119,11 @@ public class LastResult implements Serializable {
         this.referenceEnd = referenceEnd;
     }
 
-    public String geteValue() {
+    public double geteValue() {
         return eValue;
     }
 
-    public void seteValue(String eValue) {
+    public void seteValue(double eValue) {
         this.eValue = eValue;
     }
 
