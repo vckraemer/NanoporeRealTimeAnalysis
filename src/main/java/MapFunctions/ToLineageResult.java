@@ -1,6 +1,5 @@
 package MapFunctions;
 
-import Model.CentrifugeResult;
 import Model.LineageResults;
 import org.apache.spark.api.java.function.Function;
 
