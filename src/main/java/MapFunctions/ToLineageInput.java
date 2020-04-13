@@ -7,7 +7,11 @@ public class ToLineageInput implements Function<CentrifugeResult, String> {
 
     @Override
     public String call(CentrifugeResult cr) throws Exception {
-        return cr.getId()+ '\t' +cr.getTaxId();
+        if(!cr.getTaxId().equals("0")){
+            return cr.getId()+ '\t' +cr.getTaxId();
+        }else{
+            return null;
+        }
     }
 
 }
