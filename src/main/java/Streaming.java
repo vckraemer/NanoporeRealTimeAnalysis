@@ -1,3 +1,5 @@
+import InputFormat.FASTQInputFileFormat;
+import InputFormat.QRecord;
 import MapFunctions.*;
 import Model.CentrifugeResult;
 import Model.LastResult;
@@ -8,9 +10,11 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
+import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.elasticsearch.spark.streaming.api.java.JavaEsSparkStreaming;
 import org.spark_project.guava.collect.ImmutableMap;
+import scala.Tuple2;
 
 public class Streaming {
 
@@ -55,16 +59,12 @@ public class Streaming {
         conf.set("es.net.http.auth.pass", "");
         conf.set("es.resource", esIndexPrefix+"sparkstreaming");
         conf.set("es.nodes.wan.only", "true");
+
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
         JavaDStream<String> stream = ssc.textFileStream(folderPath);
-        //JavaDStream<String> stream = ssc.textFileStream("/home/vanessa/Masterarbeit/workdir/sequences/");   "/vol/spool/sequences"
 
-
-        //JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
-        //metamapsresults.print();
-
-        JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
-        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
+        JavaPairInputDStream<String, QRecord> fastqstream = ssc.fileStream(folderPath, String.class, QRecord.class, FASTQInputFileFormat.class);
+        JavaDStream<Read> reads = fastqstream.map(Tuple2::_2).map(new FromQRecordToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
 
         JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
@@ -77,9 +77,15 @@ public class Streaming {
         JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults", ImmutableMap.of("es.mapping.id","id"));
 
+
+
+        //JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
+
+//        JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
+//        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
+
         //JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
         //lineage.dstream().saveAsTextFiles("/vol/Ma_Data_new/lineageresults", "txt");
-
 
         //JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
 
