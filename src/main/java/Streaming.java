@@ -61,10 +61,13 @@ public class Streaming {
         conf.set("es.nodes.wan.only", "true");
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
-        JavaDStream<String> stream = ssc.textFileStream(folderPath);
 
-        JavaPairInputDStream<String, QRecord> fastqstream = ssc.fileStream(folderPath, String.class, QRecord.class, FASTQInputFileFormat.class);
-        JavaDStream<Read> reads = fastqstream.map(Tuple2::_2).map(new FromQRecordToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
+        JavaDStream<String> stream = ssc.textFileStream(folderPath);
+        JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
+        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
+
+        //JavaPairInputDStream<String, QRecord> fastqstream = ssc.fileStream(folderPath, String.class, QRecord.class, FASTQInputFileFormat.class);
+        //JavaDStream<Read> reads = fastqstream.map(Tuple2::_2).map(new FromQRecordToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
 
         JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
@@ -81,8 +84,7 @@ public class Streaming {
 
         //JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
 
-//        JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
-//        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
+//
 
         //JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
         //lineage.dstream().saveAsTextFiles("/vol/Ma_Data_new/lineageresults", "txt");
