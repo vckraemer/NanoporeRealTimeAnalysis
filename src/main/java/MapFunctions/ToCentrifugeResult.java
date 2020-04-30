@@ -21,7 +21,10 @@ public class ToCentrifugeResult implements Function<String, CentrifugeResult> {
                 int hL = Integer.parseInt(fields[5]);
                 int qL = Integer.parseInt(fields[6]);
                 int nM = Integer.parseInt(fields[7]);
-                return new CentrifugeResult(id, fields[0], fields[1], fields[2], sc, sBS, hL, qL, nM);
+                int ql = Integer.parseInt(fields[8]);
+                int rl = Integer.parseInt(fields[9]);
+                float rs = Float.parseFloat(fields[10]);
+                return new CentrifugeResult(id, fields[0], fields[1], fields[2], sc, sBS, hL, qL, nM, ql, rl, rs);
 
             }else
                 return null;
