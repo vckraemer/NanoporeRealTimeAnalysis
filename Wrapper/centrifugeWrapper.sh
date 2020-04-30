@@ -3,7 +3,7 @@
 filename=$1
 savefile=$filename"reads.fasta"
 
-cd /home/ubuntu/vol/spool/tmp_results/
+cd /home/ubuntu/vol/tmp_results/
 
 while read LINE; do
    echo "${LINE}" >> $savefile

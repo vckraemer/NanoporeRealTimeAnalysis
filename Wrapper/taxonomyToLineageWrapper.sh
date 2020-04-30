@@ -3,7 +3,7 @@
 VAR=""
 savefile=$1"LineageInput.txt"
 
-cd /home/ubuntu/vol/spool/tmp_results
+cd /home/ubuntu/vol/tmp_results
 while read LINE; do
 	echo "${LINE}" >> $savefile
 done
