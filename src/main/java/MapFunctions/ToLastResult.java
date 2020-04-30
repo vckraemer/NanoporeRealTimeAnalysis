@@ -20,9 +20,11 @@ public class ToLastResult implements Function<String, LastResult> {
         int re = Integer.parseInt(fields[9]);
         float bs = Float.parseFloat(fields[11]);
         double ev = Double.parseDouble(fields[10]);
+        int ql = Integer.parseInt(fields[12]);
+        int rl = Integer.parseInt(fields[13]);
 
         if(fields.length==12) {
-            return new LastResult(fields[0], fields[1], pI, al, mm, go, qs, qe, rs, re, ev, bs);
+            return new LastResult(fields[0], fields[1], pI, al, mm, go, qs, qe, rs, re, ev, bs, ql, rl);
         }else {
             return null;
         }

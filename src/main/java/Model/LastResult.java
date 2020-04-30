@@ -18,8 +18,11 @@ public class LastResult implements Serializable {
     private double eValue;
     private float bitScore;
     private Date lastSaveTime;
+    private int lengthQuery;
+    private int lengthReference;
+    private float rawScore;
 
-    public LastResult(String queryName, String referenceName, float percentIdentity, int alignmentLength, int mismatches, int gapOpens, int queryStart, int queryEnd, int referenceStart, int referenceEnd, double eValue, float bitScore) {
+    public LastResult(String queryName, String referenceName, float percentIdentity, int alignmentLength, int mismatches, int gapOpens, int queryStart, int queryEnd, int referenceStart, int referenceEnd, double eValue, float bitScore, int lengthQuery, int lengthReference) {
         this.queryName = queryName;
         this.referenceName = referenceName;
         this.percentIdentity = percentIdentity;
@@ -33,6 +36,8 @@ public class LastResult implements Serializable {
         this.eValue = eValue;
         this.bitScore = bitScore;
         lastSaveTime = new Date();
+        this.lengthQuery = lengthQuery;
+        this.lengthReference = lengthReference;
     }
 
     public LastResult(){
@@ -141,5 +146,29 @@ public class LastResult implements Serializable {
 
     public void setLastSaveTime(Date lastSaveTime) {
         this.lastSaveTime = lastSaveTime;
+    }
+
+    public int getLengthQuery() {
+        return lengthQuery;
+    }
+
+    public void setLengthQuery(int lengthQuery) {
+        this.lengthQuery = lengthQuery;
+    }
+
+    public int getLengthReference() {
+        return lengthReference;
+    }
+
+    public void setLengthReference(int lengthReference) {
+        this.lengthReference = lengthReference;
+    }
+
+    public float getRawScore() {
+        return rawScore;
+    }
+
+    public void setRawScore(float rawScore) {
+        this.rawScore = rawScore;
     }
 }

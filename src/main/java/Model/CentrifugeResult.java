@@ -15,11 +15,9 @@ public class CentrifugeResult implements Serializable {
     private int queryLength;
     private int numMatches;
     private Date centrifugeSaveTime;
-    private int lengthQuery;
-    private int lengthReference;
-    private float rawScore;
 
-    public CentrifugeResult(String Id, String readId, String seqId, String taxID, float score, float secondBestScore, int hitLength, int queryLength, int numMatches, int lengthQuery, int lengthReference, float rawScore) {
+
+    public CentrifugeResult(String Id, String readId, String seqId, String taxID, float score, float secondBestScore, int hitLength, int queryLength, int numMatches) {
         this.Id = Id;
         this.readId = readId;
         this.seqId = seqId;
@@ -30,9 +28,6 @@ public class CentrifugeResult implements Serializable {
         this.queryLength = queryLength;
         this.numMatches = numMatches;
         centrifugeSaveTime = new Date();
-        this.lengthQuery = lengthQuery;
-        this.lengthReference = lengthReference;
-        this.rawScore = rawScore;
     }
 
     public String getId() {
@@ -115,27 +110,5 @@ public class CentrifugeResult implements Serializable {
         this.centrifugeSaveTime = centrifugeSaveTime;
     }
 
-    public int getLengthQuery() {
-        return lengthQuery;
-    }
 
-    public void setLengthQuery(int lengthQuery) {
-        this.lengthQuery = lengthQuery;
-    }
-
-    public int getLengthReference() {
-        return lengthReference;
-    }
-
-    public void setLengthReference(int lengthReference) {
-        this.lengthReference = lengthReference;
-    }
-
-    public float getRawScore() {
-        return rawScore;
-    }
-
-    public void setRawScore(float rawScore) {
-        this.rawScore = rawScore;
-    }
 }
