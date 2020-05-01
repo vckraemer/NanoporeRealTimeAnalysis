@@ -72,7 +72,7 @@ public class Streaming {
 
         JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
         JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
-        JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult());
+        JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult()).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(endResults, esIndexPrefix+"lastresults");
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
