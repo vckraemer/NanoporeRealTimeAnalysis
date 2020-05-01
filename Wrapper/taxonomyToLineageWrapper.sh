@@ -1,6 +1,5 @@
 #!/bin/bash
 
-VAR=""
 savefile=$1"LineageInput.txt"
 
 cd /home/ubuntu/vol/tmp_results/ || { echo "Failure"; exit 1; }
