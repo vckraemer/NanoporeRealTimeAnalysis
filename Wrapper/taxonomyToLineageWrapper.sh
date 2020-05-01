@@ -10,4 +10,4 @@ done
 
 cd /home/ubuntu/
 
-./megan_taxon2lineage.pl -db taxonomy/ -f vol/spool/tmp_results/$savefile
+./megan_taxon2lineage.pl -db taxonomy/ -f /home/ubuntu/vol/tmp_results/$savefile
