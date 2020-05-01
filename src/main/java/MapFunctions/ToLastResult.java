@@ -23,7 +23,7 @@ public class ToLastResult implements Function<String, LastResult> {
         int ql = Integer.parseInt(fields[12]);
         int rl = Integer.parseInt(fields[13]);
 
-        if(fields.length==14) {
+        if(fields.length==15) {
             return new LastResult(fields[0], fields[1], pI, al, mm, go, qs, qe, rs, re, ev, bs, ql, rl);
         }else {
             return null;
