@@ -9,7 +9,6 @@ public class GetLastResults implements Function<String, String> {
 
     String lastResult = "";
     String readId = "";
-    int counter = 0;
 
     @Override
     public String call(String s) throws Exception {

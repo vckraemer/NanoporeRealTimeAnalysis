@@ -1,10 +1,7 @@
 import InputFormat.FASTQInputFileFormat;
 import InputFormat.QRecord;
 import MapFunctions.*;
-import Model.CentrifugeResult;
-import Model.LastResult;
-import Model.LineageResults;
-import Model.Read;
+import Model.*;
 import TransformFunctions.*;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -70,10 +67,12 @@ public class Streaming {
         //JavaDStream<Read> reads = fastqstream.map(Tuple2::_2).map(new FromQRecordToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
 
-        JavaDStream<String> lastResults = savedReads.transform(new PipeToLast());
-        JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
-        JavaDStream<LastResult> endResults = resultStream.map(new ToLastResult()).filter(x -> x!=null);
-        JavaEsSparkStreaming.saveToEs(endResults, esIndexPrefix+"lastresults");
+        JavaDStream<LastResult> lastResults = savedReads.transform(new PipeToLast()).map(new ToLastResult()).filter(x -> x!=null);
+        //JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
+        JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults");
+
+        JavaDStream<LastResultResfinder> lastResfinderResults = savedReads.transform(new PipeToLastResfinder()).map(new ToLastResultResfinder()).filter(x -> x!=null);
+        JavaEsSparkStreaming.saveToEs(lastResfinderResults, esIndexPrefix+"lastresultsresfinder");
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
