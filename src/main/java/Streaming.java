@@ -61,7 +61,7 @@ public class Streaming {
 
         JavaDStream<String> stream = ssc.textFileStream(folderPath);
         JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
-        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
+        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix)).cache();
 
         //JavaPairInputDStream<String, QRecord> fastqstream = ssc.fileStream(folderPath, String.class, QRecord.class, FASTQInputFileFormat.class);
         //JavaDStream<Read> reads = fastqstream.map(Tuple2::_2).map(new FromQRecordToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
@@ -71,7 +71,7 @@ public class Streaming {
         //JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults");
 
-        JavaDStream<LastResultResfinder> lastResfinderResults = savedReads.transform(new PipeToLastResfinder()).map(new ToLastResultResfinder()).filter(x -> x!=null);
+        JavaDStream<LastResultResfinder> lastResfinderResults = reads.map(new ToFasta()).transform(new PipeToLastResfinder()).map(new ToLastResultResfinder()).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lastResfinderResults, esIndexPrefix+"lastresultsresfinder");
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
