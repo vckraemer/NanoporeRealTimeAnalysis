@@ -1,8 +1,9 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Read {
+public class Read implements Serializable {
 
     private String id;
     private String Seqeuence;
