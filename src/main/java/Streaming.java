@@ -1,8 +1,11 @@
 import InputFormat.FASTQInputFileFormat;
+import InputFormat.FastqInputFormat;
 import InputFormat.QRecord;
 import MapFunctions.*;
 import Model.*;
 import TransformFunctions.*;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.streaming.Duration;
@@ -60,8 +63,11 @@ public class Streaming {
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
 
         JavaDStream<String> stream = ssc.textFileStream(folderPath);
-        JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
-        JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix)).cache();
+        //JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
+        //JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix)).cache();
+
+        JavaPairInputDStream<LongWritable, Text> fastqRDD =  ssc.fileStream("/home/vanessa/Masterarbeit/workdir/sequences", LongWritable.class, Text.class, FastqInputFormat.class);
+        JavaDStream<Read> reads = fastqRDD.map(Tuple2::_2).map(new TextToString()).map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix)).cache();
 
         //JavaPairInputDStream<String, QRecord> fastqstream = ssc.fileStream(folderPath, String.class, QRecord.class, FASTQInputFileFormat.class);
         //JavaDStream<Read> reads = fastqstream.map(Tuple2::_2).map(new FromQRecordToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
