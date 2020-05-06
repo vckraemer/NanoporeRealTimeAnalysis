@@ -66,7 +66,7 @@ public class Streaming {
         //JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
         //JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix)).cache();
 
-        JavaPairInputDStream<LongWritable, Text> fastqRDD =  ssc.fileStream("/home/vanessa/Masterarbeit/workdir/sequences", LongWritable.class, Text.class, FastqInputFormat.class);
+        JavaPairInputDStream<LongWritable, Text> fastqRDD =  ssc.fileStream(folderPath, LongWritable.class, Text.class, FastqInputFormat.class);
         JavaDStream<Read> reads = fastqRDD.map(Tuple2::_2).map(new TextToString()).map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix)).cache();
 
         //JavaPairInputDStream<String, QRecord> fastqstream = ssc.fileStream(folderPath, String.class, QRecord.class, FASTQInputFileFormat.class);
