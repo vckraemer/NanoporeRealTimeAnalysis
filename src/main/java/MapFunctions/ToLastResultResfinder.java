@@ -1,6 +1,5 @@
 package MapFunctions;
 
-import Model.LastResult;
 import Model.LastResultResfinder;
 import org.apache.spark.api.java.function.Function;
 

@@ -63,9 +63,7 @@ public class FastqRecordReader extends RecordReader<LongWritable, Text>{
             }
 
             final String s = this.lrr.getCurrentValue().toString().trim();
-            //System.out.println("nextKeyValue() s="+s);
 
-            // Prevent empty lines
             if (s.length() == 0) {
                 continue;
             }
@@ -82,24 +80,20 @@ public class FastqRecordReader extends RecordReader<LongWritable, Text>{
                 }
                 else {
                     shiftLines();
-                    shiftPositions(); //this.keys[i] = this.keys[i+1];
+                    shiftPositions();
                 }
             }
 
-        } //end-while
+        }
 
-        // set key
         this.key = new LongWritable(this.keys[0]);
-        // set value
         this.value = buildValue();
-        // clear records for next FASTQ sequence
         clearRecords();
 
         return true;
     }
 
     private void shiftLines() {
-        // this.lines[i] = this.lines[i+1];
         this.lines[0] = this.lines[1];
         this.lines[1] = this.lines[2];
         this.lines[2] = this.lines[3];

@@ -21,6 +21,7 @@ public class LastResult implements Serializable {
     private int lengthQuery;
     private int lengthReference;
     private float rawScore;
+    private double identityCompleteGeneLength;
 
     public LastResult(String queryName, String referenceName, float percentIdentity, int alignmentLength, int mismatches, int gapOpens, int queryStart, int queryEnd, int referenceStart, int referenceEnd, double eValue, float bitScore, int lengthQuery, int lengthReference) {
         this.queryName = queryName;
@@ -38,6 +39,8 @@ public class LastResult implements Serializable {
         lastSaveTime = new Date();
         this.lengthQuery = lengthQuery;
         this.lengthReference = lengthReference;
+        identityCompleteGeneLength = (((referenceEnd-referenceStart+1.0)/lengthReference)*(percentIdentity/100.0))*100.0;
+
     }
 
     public LastResult(){
@@ -170,5 +173,13 @@ public class LastResult implements Serializable {
 
     public void setRawScore(float rawScore) {
         this.rawScore = rawScore;
+    }
+
+    public double getIdentityCompleteGeneLength() {
+        return identityCompleteGeneLength;
+    }
+
+    public void setIdentityCompleteGeneLength(double identityCompleteGeneLength) {
+        this.identityCompleteGeneLength = identityCompleteGeneLength;
     }
 }

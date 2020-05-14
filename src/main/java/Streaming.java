@@ -1,6 +1,4 @@
-import InputFormat.FASTQInputFileFormat;
 import InputFormat.FastqInputFormat;
-import InputFormat.QRecord;
 import MapFunctions.*;
 import Model.*;
 import TransformFunctions.*;
@@ -26,6 +24,7 @@ public class Streaming {
         String esPort = "9200";
         String esIndexPrefix = "";
         String folderPath = "";
+        String lastDatabase= "";
 
         if(args.length >=2 && args.length % 2 == 0){
             int i = 0;
@@ -39,6 +38,8 @@ public class Streaming {
                     esIndexPrefix = args[i+1];
                 } else if(args[i].equals("-f")){
                     folderPath = args[i+1];
+                } else if(args[i].equals("-ldb")){
+                    lastDatabase = args[i+1];
                 }
                 i++;
             }
@@ -46,7 +47,7 @@ public class Streaming {
             System.out.println("Check Usage");
             System.exit(1);
         }
-        if(folderPath.equals("")){
+        if(folderPath.equals("") || lastDatabase.equals("")){
             System.out.println("Check Usage");
             System.exit(1);
         }
@@ -62,23 +63,21 @@ public class Streaming {
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
 
-        JavaDStream<String> stream = ssc.textFileStream(folderPath);
-        //JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
-        //JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix)).cache();
-
         JavaPairInputDStream<LongWritable, Text> fastqRDD =  ssc.fileStream(folderPath, LongWritable.class, Text.class, FastqInputFormat.class);
-        JavaDStream<Read> reads = fastqRDD.map(Tuple2::_2).map(new TextToString()).map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix)).cache();
+        JavaDStream<Read> reads = fastqRDD.map(Tuple2::_2).map(new TextToString()).map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
 
-        //JavaPairInputDStream<String, QRecord> fastqstream = ssc.fileStream(folderPath, String.class, QRecord.class, FASTQInputFileFormat.class);
-        //JavaDStream<Read> reads = fastqstream.map(Tuple2::_2).map(new FromQRecordToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
 
-        JavaDStream<LastResult> lastResults = savedReads.transform(new PipeToLast()).map(new ToLastResult()).filter(x -> x!=null);
-        //JavaDStream<String> resultStream = lastResults.map(new GetLastResults()).filter(x -> x!=null);
-        JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults");
-
-        JavaDStream<LastResultResfinder> lastResfinderResults = reads.map(new ToFasta()).transform(new PipeToLastResfinder()).map(new ToLastResultResfinder()).filter(x -> x!=null);
-        JavaEsSparkStreaming.saveToEs(lastResfinderResults, esIndexPrefix+"lastresultsresfinder");
+        if(lastDatabase.equals("ARGANNOT")){
+            JavaDStream<LastResult> lastResults = savedReads.transform(new PipeToLast()).map(new ToLastResult()).filter(x -> x!=null);
+            JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults");
+        } else if (lastDatabase.equals("ResFinder")){
+            JavaDStream<LastResult> lastResfinderResults = savedReads.transform(new PipeToLastResfinder()).map(new ToLastResult()).filter(x -> x!=null);
+            JavaEsSparkStreaming.saveToEs(lastResfinderResults, esIndexPrefix+"lastresults");
+        } else if (lastDatabase.equals("AMRFinder")){
+            JavaDStream<LastResult> lastAMRFinderResults = savedReads.transform(new PipeToLastAMRFinder()).map(new ToLastResult()).filter(x -> x!=null);
+            JavaEsSparkStreaming.saveToEs(lastAMRFinderResults, esIndexPrefix+"lastresults");
+        }
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
@@ -86,34 +85,11 @@ public class Streaming {
         JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults", ImmutableMap.of("es.mapping.id","id"));
 
 
-
-        //JavaDStream<String> metamapsresults = stream.transform(new PipeToMetaMaps());
-
-//
-
-        //JavaEsSparkStreaming.saveToEs(endResult, "centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
-        //lineage.dstream().saveAsTextFiles("/vol/Ma_Data_new/lineageresults", "txt");
-
-        //JavaEsSparkStreaming.saveToEs(endResults, "lastresults");
-
-        //savedReads.dstream().saveAsTextFiles("/vol/Ma_Data_new/lasttestresults", "txt");
-
-        //JavaDStream<String> fastq = stream.map(new ReadFastq()).filter(x -> x!=null);
-        //JavaDStream<Read> reads = fastq.map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent());
-        //JavaDStream<String> savedReads = reads.transform(new SaveToElastic()).map(new ToFasta());
-        //savedReads.cache();
-
         //JavaDStream<String> blastResults = savedReads.transform(new PipeToBlast()).map(new GetBlastResultJsonSingleReport()).filter(x -> x!=null);
         //JavaDStream<String> blastxResults = savedReads.transform(new PipeToBlastX()).map(new GetBlastResultJsonSingleReport()).filter(x -> x!=null);
         //results.cache();
         //results.print();
 
-        //results.dstream().saveAsTextFiles("fil
-        //home/vanessa/Masterarbeit/workdir/test", "txt");
-        //JavaEsSparkStreaming.saveJsonToEs(blastResults, "sparkblastresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq, hseq, midline"));
-        //JavaEsSparkStreaming.saveJsonToEs(blastxResults, "sparkblastxresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title","es.mapping.exclude","qseq, hseq, midline"));
-        //JavaEsSparkStreaming.saveJsonToEs(blastxResults, "sparkblastxresults", ImmutableMap.of("es.mapping.id","report.results.search.query_title"));
-        //JavaEsSparkStreaming.saveToEs(readsblast, "sparkstreaming");
 
         ssc.start();
         ssc.awaitTermination();
