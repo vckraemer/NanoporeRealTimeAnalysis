@@ -68,16 +68,16 @@ public class Streaming {
 
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
 
-        if(lastDatabase.equals("ARGANNOT")){
-            JavaDStream<LastResult> lastResults = savedReads.transform(new PipeToLast()).map(new ToLastResult()).filter(x -> x!=null);
+
+            JavaDStream<LastResult> lastResults = savedReads.transform(new PipeToLast(lastDatabase)).map(new ToLastResult()).filter(x -> x!=null);
             JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults");
-        } else if (lastDatabase.equals("ResFinder")){
-            JavaDStream<LastResult> lastResfinderResults = savedReads.transform(new PipeToLastResfinder()).map(new ToLastResult()).filter(x -> x!=null);
-            JavaEsSparkStreaming.saveToEs(lastResfinderResults, esIndexPrefix+"lastresults");
-        } else if (lastDatabase.equals("AMRFinder")){
-            JavaDStream<LastResult> lastAMRFinderResults = savedReads.transform(new PipeToLastAMRFinder()).map(new ToLastResult()).filter(x -> x!=null);
-            JavaEsSparkStreaming.saveToEs(lastAMRFinderResults, esIndexPrefix+"lastresults");
-        }
+//        } else if (lastDatabase.equals("ResFinder")){
+//            JavaDStream<LastResult> lastResfinderResults = savedReads.transform(new PipeToLastResfinder()).map(new ToLastResult()).filter(x -> x!=null);
+//            JavaEsSparkStreaming.saveToEs(lastResfinderResults, esIndexPrefix+"lastresults");
+//        } else if (lastDatabase.equals("AMRFinder")){
+//            JavaDStream<LastResult> lastAMRFinderResults = savedReads.transform(new PipeToLastAMRFinder()).map(new ToLastResult()).filter(x -> x!=null);
+//            JavaEsSparkStreaming.saveToEs(lastAMRFinderResults, esIndexPrefix+"lastresults");
+//        }
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge());
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
@@ -89,7 +89,6 @@ public class Streaming {
         //JavaDStream<String> blastxResults = savedReads.transform(new PipeToBlastX()).map(new GetBlastResultJsonSingleReport()).filter(x -> x!=null);
         //results.cache();
         //results.print();
-
 
         ssc.start();
         ssc.awaitTermination();
