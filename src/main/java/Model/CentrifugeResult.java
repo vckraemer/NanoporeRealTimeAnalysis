@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class CentrifugeResult implements Serializable {
 
-    private String Id;
+    private String id;
     private String readId;
     private String seqId;
     private String taxId;
@@ -18,7 +18,7 @@ public class CentrifugeResult implements Serializable {
 
 
     public CentrifugeResult(String Id, String readId, String seqId, String taxID, float score, float secondBestScore, int hitLength, int queryLength, int numMatches) {
-        this.Id = Id;
+        this.id = Id;
         this.readId = readId;
         this.seqId = seqId;
         this.taxId = taxID;
@@ -31,11 +31,11 @@ public class CentrifugeResult implements Serializable {
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getReadId() {
@@ -109,6 +109,5 @@ public class CentrifugeResult implements Serializable {
     public void setCentrifugeSaveTime(Date centrifugeSaveTime) {
         this.centrifugeSaveTime = centrifugeSaveTime;
     }
-
 
 }

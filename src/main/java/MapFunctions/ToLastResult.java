@@ -5,6 +5,12 @@ import org.apache.spark.api.java.function.Function;
 
 public class ToLastResult implements Function<String, LastResult> {
 
+    private String selectedDatabase;
+
+    public ToLastResult(String database){
+        selectedDatabase = database;
+    }
+
     @Override
     public LastResult call(String s) throws Exception {
 
@@ -25,7 +31,7 @@ public class ToLastResult implements Function<String, LastResult> {
             int ql = Integer.parseInt(fields[12]);
             int rl = Integer.parseInt(fields[13]);
 
-            return new LastResult(fields[0], fields[1], pI, al, mm, go, qs, qe, rs, re, ev, bs, ql, rl);
+            return new LastResult(fields[0], fields[1], pI, al, mm, go, qs, qe, rs, re, ev, bs, ql, rl, selectedDatabase);
 
         }else {
             return null;

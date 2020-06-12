@@ -5,6 +5,12 @@ import org.apache.spark.api.java.function.Function;
 
 public class PipeToCentrifuge implements Function<JavaRDD<String>, JavaRDD<String>> {
 
+    private String selectedDatabase;
+
+    public PipeToCentrifuge(String database){
+        selectedDatabase = database;
+    }
+
     @Override
     public JavaRDD<String> call(JavaRDD<String> read) throws Exception {
 
@@ -15,7 +21,7 @@ public class PipeToCentrifuge implements Function<JavaRDD<String>, JavaRDD<Strin
         String filename = pathParts[pathParts.length-1];
 
         //-q fastq input -f fasta input
-        String centrifugeCall = "bash /home/ubuntu/centrifugeWrapper.sh " + filename;
+        String centrifugeCall = "bash /home/ubuntu/centrifugeWrapper.sh " + filename + " " + selectedDatabase;
         JavaRDD<String> pipeRDD = read.pipe(centrifugeCall);
         pipeRDD.collect();
         return pipeRDD;

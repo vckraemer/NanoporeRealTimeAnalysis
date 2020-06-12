@@ -6,6 +6,7 @@ import java.util.Date;
 public class LineageResults implements Serializable {
 
     private String id;
+    private String readId;
     private String taxnum;
     private String superkingdom;
     private String phylum;
@@ -19,6 +20,7 @@ public class LineageResults implements Serializable {
 
     public LineageResults(String id, String taxId, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies) {
         this.id = id;
+        readId = id.split("_")[0];
         this.taxnum = taxId;
         this.superkingdom = superkingdom;
         this.phylum = phylum;
@@ -117,5 +119,13 @@ public class LineageResults implements Serializable {
 
     public void setLineageSaveTime(Date lineageSaveTime) {
         this.lineageSaveTime = lineageSaveTime;
+    }
+
+    public String getReadId() {
+        return readId;
+    }
+
+    public void setReadId(String readId) {
+        this.readId = readId;
     }
 }

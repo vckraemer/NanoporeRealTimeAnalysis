@@ -6,6 +6,7 @@ import java.util.Date;
 public class Read implements Serializable {
 
     private String id;
+    private String readId;
     private String Seqeuence;
     private String Description;
     private String Quality;
@@ -20,7 +21,8 @@ public class Read implements Serializable {
     }
 
     public Read(String id, String sequence, String description, String quality, int readlength){
-        this.id = id.substring(1);
+        this.id = id.split(" ")[0].substring(1);
+        readId = id.split(" ")[0].substring(1);
         Seqeuence = sequence;
         Description = description;
         Quality = quality;
@@ -97,4 +99,13 @@ public class Read implements Serializable {
     public void setQuality(String quality) {
         Quality = quality;
     }
+
+    public String getReadId() {
+        return readId;
+    }
+
+    public void setReadId(String readId) {
+        this.readId = readId;
+    }
+
 }
