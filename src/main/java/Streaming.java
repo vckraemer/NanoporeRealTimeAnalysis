@@ -52,6 +52,10 @@ public class Streaming {
             System.exit(1);
         }
 
+        if(centrifugeDatabasePath.equals("")){
+            centrifugeDatabasePath = "provided";
+        }
+
         SparkConf conf = new SparkConf().setAppName("fileStreaming");
         conf.set("es.index.auto.create", "true");
         conf.set("es.nodes", esIp);
