@@ -11,7 +11,7 @@ while read LINE; do
 done
 
 if [ "$dbpath" == "provided" ]; then
-    centrifuge -f -k 1 -p 8 -x /mnt/p_compressed+h+v/p_compressed+h+v "$savefile"
+    centrifuge -f -k 1 -p 8 -x /mnt/p+h+v/p+h+v "$savefile"
 else
     centrifuge -f -k 1 -p 8 -x "$dbpath" "$savefile"
 fi
