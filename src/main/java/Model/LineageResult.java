@@ -33,6 +33,21 @@ public class LineageResult implements Serializable {
         lineageSaveTime = new Date();
     }
 
+    public LineageResult(String id, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies) {
+        this.id = id;
+        readId = id.split("_")[0];
+        this.taxnum = id.split("_")[id.split("_").length-1];
+        this.superkingdom = superkingdom;
+        this.phylum = phylum;
+        this.tclass = tclass;
+        this.order = order;
+        this.family = family;
+        this.genus = genus;
+        this.species = species;
+        this.subspecies = subspecies;
+        lineageSaveTime = new Date();
+    }
+
     public String getId() {
         return id;
     }

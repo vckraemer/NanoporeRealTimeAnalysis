@@ -15,7 +15,10 @@ for line in sys.stdin:
 
 for key in lineage_dict:
         if re.match(r"^[1-9][0-9]*$",lineage_dict[key]):
-            lineage = ncbi.get_lineage(lineage_dict[key])
-            names = ncbi.get_taxid_translator(lineage)
-            lineagenames = '|'.join(str(x) for x in names.values())
-            print (key +'|'+ lineagenames)
+            try:
+                lineage = ncbi.get_lineage(lineage_dict[key])
+                names = ncbi.get_taxid_translator(lineage)
+                lineagenames = '|'.join(str(names[x])+'_'+str(ncbi.get_rank([x])[x]) for x in names)
+                print (key +'|'+ lineagenames)
+            except:
+                pass
