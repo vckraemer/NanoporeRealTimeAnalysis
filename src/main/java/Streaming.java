@@ -71,6 +71,7 @@ public class Streaming {
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(30000));
 
+
         JavaPairInputDStream<LongWritable, Text> fastqRDD =  ssc.fileStream(folderPath, LongWritable.class, Text.class, FastqInputFormat.class);
         JavaDStream<Read> reads = fastqRDD.map(Tuple2::_2).map(new TextToString()).map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
 
