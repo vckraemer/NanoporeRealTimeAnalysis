@@ -7,7 +7,6 @@ ncbi = NCBITaxa()
 lineage_dict = {}
 
 while line in sys.stdin:
-        if ";" in line:
             ids = line.split(';')
             lineage_dict[ids[0]] = ids[1].strip()
 
