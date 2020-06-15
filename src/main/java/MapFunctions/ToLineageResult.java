@@ -22,7 +22,7 @@ public class ToLineageResult implements Function<String, LineageResult> {
         String[] fields = s.split("\\|");
         if(fields.length>13){
             if(!fields[0].equals("")) {
-                return new LineageResult(fields[0], fields[1], fields[5], fields[6], fields[7], fields[8], fields[9], fields[10], fields[11], fields[12]);
+                return new LineageResult(fields[0], fields[2], fields[4], fields[8], fields[18], fields[23], fields[28], fields[30], fields[31], fields[31]);
             }else {
                 return null;
             }
