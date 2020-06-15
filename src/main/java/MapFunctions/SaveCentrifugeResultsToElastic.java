@@ -16,7 +16,8 @@ public class SaveCentrifugeResultsToElastic implements Function<JavaRDD<Centrifu
 
     @Override
     public JavaRDD<CentrifugeResult> call(JavaRDD<CentrifugeResult> centrifugeResultJavaRDD) throws Exception {
-        JavaEsSpark.saveToEs(centrifugeResultJavaRDD, esIndexPrefix+"centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
+        //JavaEsSpark.saveToEs(centrifugeResultJavaRDD, esIndexPrefix+"centrifugeresults", ImmutableMap.of("es.mapping.id","id"));
+        JavaEsSpark.saveToEs(centrifugeResultJavaRDD, esIndexPrefix+"centrifugeresults");
         return centrifugeResultJavaRDD;
     }
 }
