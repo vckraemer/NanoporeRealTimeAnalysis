@@ -46,7 +46,7 @@ public class ToLineageResult implements Function<String, LineageResult> {
             else if(field.contains("class")){
                 tclass = field.split("_")[0];
             }
-            else if(field.contains("species")){
+            else if(field.contains("species") && !field.contains("subspecies")){
                 species = field.split("_")[0];
             }
             else if(field.contains("order")){
