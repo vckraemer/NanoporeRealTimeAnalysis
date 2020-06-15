@@ -12,4 +12,4 @@ cd /home/ubuntu/ || { echo "Failure"; exit 1; }
 
 ./megan_taxon2lineage.pl -db taxonomy/ -f /mnt/tmp_results/"$savefile"
 
-rm -f /mnt/tmp_results/"$savefile"
+#rm -f /mnt/tmp_results/"$savefile"
