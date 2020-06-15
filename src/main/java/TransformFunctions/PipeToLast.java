@@ -16,7 +16,7 @@ public class PipeToLast implements Function<JavaRDD<String>, JavaRDD<String>> {
     public JavaRDD<String> call(JavaRDD<String> read) throws Exception {
 
         String lastCall = "";
-        //read.context().setLocalProperty("spark.scheduler.pool", "fair_pool");
+        read.context().setLocalProperty("spark.scheduler.pool", "a_different_pool");
         if(selectedDatabase.equals("ARGANNOT")){
             lastCall = "lastal -P 14 -F15 -f BlastTab+ /home/ubuntu/arg_annot_db/arg_annot_db ";
         } else if (selectedDatabase.equals("ResFinder")){
@@ -26,7 +26,7 @@ public class PipeToLast implements Function<JavaRDD<String>, JavaRDD<String>> {
         }
 
         JavaRDD<String> pipeRDD = read.pipe(lastCall);
-        //pipeRDD.context().setLocalProperty("spark.scheduler.pool", "fair_pool");
+        pipeRDD.context().setLocalProperty("spark.scheduler.pool", "a_different_pool");
         pipeRDD.collect();
 
         return pipeRDD;
