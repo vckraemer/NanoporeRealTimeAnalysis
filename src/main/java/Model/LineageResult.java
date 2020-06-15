@@ -3,7 +3,7 @@ package Model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class LineageResults implements Serializable {
+public class LineageResult implements Serializable {
 
     private String id;
     private String readId;
@@ -18,7 +18,7 @@ public class LineageResults implements Serializable {
     private String subspecies;
     private Date lineageSaveTime;
 
-    public LineageResults(String id, String taxId, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies) {
+    public LineageResult(String id, String taxId, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies) {
         this.id = id;
         readId = id.split("_")[0];
         this.taxnum = taxId;

@@ -1,16 +1,13 @@
 package TransformFunctions;
 
-import Model.LineageResults;
+import Model.LineageResult;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-public class CleanupFiles implements Function<JavaRDD<LineageResults>, JavaRDD<LineageResults>>  {
+public class CleanupFiles implements Function<JavaRDD<LineageResult>, JavaRDD<LineageResult>>  {
 
     @Override
-    public JavaRDD<LineageResults> call(JavaRDD<LineageResults> lineageResults) throws Exception {
+    public JavaRDD<LineageResult> call(JavaRDD<LineageResult> lineageResults) throws Exception {
 
         String debug = lineageResults.toDebugString();
         String[] debugParts = debug.split("\\|");

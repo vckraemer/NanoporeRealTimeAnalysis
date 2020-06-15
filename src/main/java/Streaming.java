@@ -13,6 +13,8 @@ import org.elasticsearch.spark.streaming.api.java.JavaEsSparkStreaming;
 import org.spark_project.guava.collect.ImmutableMap;
 import scala.Tuple2;
 
+
+
 public class Streaming {
 
     public static void main(String[] args) throws InterruptedException {
@@ -77,7 +79,7 @@ public class Streaming {
 
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge(centrifugeDatabasePath));
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
-        JavaDStream<LineageResults> lineage = endResult.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
+        JavaDStream<LineageResult> lineage = endResult.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults", ImmutableMap.of("es.mapping.id","id"));
 
         //JavaDStream<String> blastResults = savedReads.transform(new PipeToBlast()).map(new GetBlastResultJsonSingleReport()).filter(x -> x!=null);

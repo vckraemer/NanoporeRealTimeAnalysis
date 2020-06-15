@@ -18,11 +18,11 @@ public class PipeToLast implements Function<JavaRDD<String>, JavaRDD<String>> {
         String lastCall = "";
 
         if(selectedDatabase.equals("ARGANNOT")){
-            lastCall = "lastal -P 8 -F15 -f BlastTab+ /home/ubuntu/arg_annot_db/arg_annot_db ";
+            lastCall = "lastal -P 14 -F15 -f BlastTab+ /home/ubuntu/arg_annot_db/arg_annot_db ";
         } else if (selectedDatabase.equals("ResFinder")){
-            lastCall = "lastal -P 8 -f BlastTab+ /home/ubuntu/resfinderdb/resfinder ";
+            lastCall = "lastal -P 14 -f BlastTab+ /home/ubuntu/resfinderdb/resfinder ";
         } else if (selectedDatabase.equals("AMRFinder")){
-            lastCall = "lastal -P 8 -F15 -f BlastTab+ /home/ubuntu/AMRdb/AMRdb ";
+            lastCall = "lastal -P 14 -F15 -f BlastTab+ /home/ubuntu/AMRdb/AMRdb ";
         }
 
         JavaRDD<String> pipeRDD = read.pipe(lastCall);
