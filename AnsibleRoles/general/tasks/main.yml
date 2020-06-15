@@ -1,0 +1,39 @@
+---
+- name: Update Cache
+  apt:
+    cache_valid_time: 7600
+
+- name: Install JDK
+  apt:
+    name: openjdk-8-jdk
+
+- name: Set Java_Home
+  lineinfile:
+    path: /etc/bash.bashrc
+    line: /usr/lib/jvm/java-1.8.0-openjdk-amd64
+
+- name: Set Java versiom
+  shell: sudo update-java-alternatives -s java-1.8.0-openjdk-amd64
+
+- name: Install apt-transport-https
+  apt:
+    name: apt-transport-https
+    state: latest
+
+- name: Download spark
+  get_url:
+    url: https://archive.apache.org/dist/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz
+    dest: /home/ubuntu/
+    mode: '0667'
+
+- name: Make spark directory
+  file:
+      path: /home/ubuntu/spark
+      state: directory
+  become_user: ubuntu
+
+- name: Extract Spark from archive
+  unarchive:
+    src: /home/ubuntu/spark-2.4.4-bin-hadoop2.7.tgz
+    dest: /home/ubuntu/spark
+  become_user: ubuntu

@@ -1,0 +1,94 @@
+---
+- name: Update Cache
+  apt:
+    cache_valid_time: 7600
+
+- name: "Setup Centrifuge"
+  include: centrifuge.yml
+
+- name: "Setup LAST"
+  include: last.yml
+
+- name: Make tmp directory
+  file:
+      path: /mnt/tmp_results
+      state: directory
+      mode: 0777
+  become_user: ubuntu
+
+- name: Start Spark Worker
+  shell: ./start-slave.sh  spark://{{ master.ip }}:7077
+  args:
+    chdir: /home/ubuntu/spark/spark-2.4.4-bin-hadoop2.7/sbin
+
+- name: Download Centrifuge Wrapper
+  get_url:
+    url: https://raw.githubusercontent.com/vckraemer/NanoporeRealTimeAnalysis/master/Wrapper/centrifugeWrapper.sh
+    dest: /home/ubuntu/
+    mode: '0777'
+  become_user: ubuntu
+
+- name: Download Lineage Wrapper
+  get_url:
+    url: https://raw.githubusercontent.com/vckraemer/NanoporeRealTimeAnalysis/master/Wrapper/taxonomyToLineageWrapper.sh
+    dest: /home/ubuntu/
+    mode: '0777'
+  become_user: ubuntu
+
+- name: Download taxon2lineage
+  get_url:
+    url: https://raw.githubusercontent.com/virus-x-eu/tools/master/taxon2lineage/1.0/megan_taxon2lineage.pl
+    dest: /home/ubuntu/
+    mode: '0777'
+  become_user: ubuntu
+
+- name: Download etelineage.py
+  get_url:
+    url: https://raw.githubusercontent.com/vckraemer/NanoporeRealTimeAnalysis/master/Scripts/etelineage.py
+    dest: /home/ubuntu/
+    mode: '0777'
+  become_user: ubuntu
+
+- name: Make etetoolkit directory
+  file:
+      path: /home/ubuntu/.etetoolkit
+      state: directory
+      mode: 0777
+  become_user: ubuntu
+
+- name: Download taxa.tar.gz
+  get_url:
+    url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/taxa.tar.gz
+    dest: /home/ubuntu/
+    mode: '0777'
+  become_user: ubuntu
+
+- name: Extract taxa.tar.gz
+  unarchive:
+    src: /home/ubuntu/taxa.tar.gz
+    dest: /home/ubuntu/.etetoolkit
+    remote_src: yes
+  become_user: ubuntu
+
+- name: Download taxatraverse.tar.gz
+  get_url:
+    url:     https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/taxatraverse.tar.gz
+    dest: /home/ubuntu/
+    mode: '0777'
+  become_user: ubuntu
+
+- name: Extract taxatraverse.tar.gz
+  unarchive:
+    src: /home/ubuntu/taxatraverse.tar.gz
+    dest: /home/ubuntu/.etetoolkit
+    remote_src: yes
+  become_user: ubuntu
+
+- name: Install pip
+  apt:
+    name: python3-pip
+    state: latest
+
+- name: install ete3
+  become: yes
+  shell: "pip3 install ete3"

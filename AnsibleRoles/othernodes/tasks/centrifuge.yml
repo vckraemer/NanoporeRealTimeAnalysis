@@ -1,0 +1,31 @@
+- name: Install Centrifuge
+  apt:
+    name: centrifuge
+    state: latest
+
+- name: Copy file with owner and permissions
+  copy:
+    src: /home/ubuntu/vol/spool/p+h+v.tar.gz
+    dest: /mnt/
+    owner: ubuntu
+    group: ubuntu
+    mode: '0667'
+
+- name: Remove index file
+  file:
+    path: /home/ubuntu/vol/spool/p+h+v.tar.gz
+    state: absent
+
+- name: Make Centrifuge p+h+v.tar.gz index directory
+  file:
+      path: /mnt/p+h+v/
+      state: directory
+      mode: 0777
+  become_user: ubuntu
+
+- name: Extract Centrifuge p+h+v index data from archive
+  unarchive:
+    src: /mnt/p+h+v.tar.gz
+    dest: /mnt/p+h+v/
+    remote_src: yes
+  become_user: ubuntu

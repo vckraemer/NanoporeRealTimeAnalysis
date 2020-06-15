@@ -1,0 +1,56 @@
+---
+- name: Update Cache
+  apt:
+    cache_valid_time: 7600
+
+- name: Make git directory
+  file:
+    path: /home/ubuntu/NanoRealTimeAnalysis
+    state: directory
+  become_user: ubuntu
+
+- name: Download p+h+v centrifuge index
+  get_url:
+    url: ftp://ftp.ccb.jhu.edu/pub/infphilo/centrifuge/data/p+h+v.tar.gz
+    dest: /home/ubuntu/vol/spool/
+    mode: '0667'
+
+- name: Create monitored directory on shared volume
+  file:
+    path: /vol/spool/sequences
+    state: directory
+  become_user: ubuntu
+
+- name: Create a second monitored directory on shared volume
+  file:
+    path: /vol/spool/sequences2
+    state: directory
+  become_user: ubuntu
+
+- name: Checkout Github repo NanoRealTimeAnalysis
+  git:
+    repo: 'https://github.com/vckraemer/NanoporeRealTimeAnalysis.git'
+    dest: /home/ubuntu/NanoRealTimeAnalysis
+  become_user: ubuntu
+
+- name: Install maven
+  apt:
+    name: maven
+    state: latest
+
+- name: Compile source code with maven
+  command: mvn clean compile assembly:single
+  become_user: ubuntu
+  args:
+    chdir: /home/ubuntu/NanoRealTimeAnalysis
+
+- name: Start Spark Master
+  shell: ./start-master.sh
+  args:
+    chdir: /home/ubuntu/spark/spark-2.4.4-bin-hadoop2.7/sbin
+
+- name: Download Spark Pool Configuration
+  get_url:
+    url: https://raw.githubusercontent.com/vckraemer/NanoporeRealTimeAnalysis/master/SparkConFiles/fair_pools.xml
+    dest: /home/ubuntu/
+    mode: '0777'

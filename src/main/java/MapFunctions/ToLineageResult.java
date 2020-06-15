@@ -8,15 +8,15 @@ public class ToLineageResult implements Function<String, LineageResult> {
     @Override
     public LineageResult call(String s) throws Exception {
 
-        String superkingdom = "";
-        String phylum = "";
-        String tclass = "";
-        String order = "";
-        String family = "";
-        String genus = "";
-        String species = "";
-        String subspecies = "";
-        String speciesgroup = "";
+        String superkingdom = "unclassified";
+        String phylum = "unclassified";
+        String tclass = "unclassified";
+        String order = "unclassified";
+        String family = "unclassified";
+        String genus = "unclassified";
+        String species = "unclassified";
+        String subspecies = "unclassified";
+        String speciesgroup = "unclassified";
 
 //        String[] fields = s.split("\t");
 //        if(fields.length==13){

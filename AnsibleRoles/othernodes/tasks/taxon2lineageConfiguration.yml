@@ -1,0 +1,61 @@
+- name: Download Taxonomy data
+  get_url:
+    url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/taxdump.tar.gz
+    dest: /home/ubuntu/
+    mode: '0777'
+
+- name: Make taxonomy db directory
+  file:
+      path: /home/ubuntu/taxonomy/
+      state: directory
+      mode: 0777
+  become_user: ubuntu
+
+- name: Extract Taxonomy data from archive
+  unarchive:
+    src: /home/ubuntu/taxdump.tar.gz
+    dest: /home/ubuntu/taxonomy/
+    remote_src: yes
+  become_user: ubuntu
+
+- name: Download taxon2lineage
+  get_url:
+    url: https://raw.githubusercontent.com/virus-x-eu/tools/master/taxon2lineage/1.0/megan_taxon2lineage.pl
+    dest: /home/ubuntu/
+    mode: '0777'
+
+- name: Setup environment for taxon2lineage
+  become: yes
+  shell: "apt-get install -y wget build-essential make perl libexpat1-dev"
+
+- name: Configure cpan
+  become: yes
+  shell: "(echo y;echo o conf prerequisites_policy follow;echo o conf commit)|cpan"
+
+- name: Configure cpan
+  become: yes
+  shell: "cpan -fi Moose"
+
+- name: Configure cpan
+  become: yes
+  shell: "cpan -fi IPC::Run"
+
+- name: Configure cpan
+  become: yes
+  shell: "cpan -fi Bio::LITE::Taxonomy::NCBI"
+
+- name: Configure cpan
+  become: yes
+  shell: "cpan -fi Bio::SearchIO"
+
+- name: Setup environment for taxon2lineage
+  become: yes
+  shell: "apt-get purge -y build-essential make libexpat1-dev"
+
+- name: Setup environment for taxon2lineage
+  become: yes
+  shell: "apt-get autoremove -y --purge"
+
+- name: Setup environment for taxon2lineage
+  become: yes
+  shell: "apt-get clean"

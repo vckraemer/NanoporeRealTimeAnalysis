@@ -1,0 +1,43 @@
+- name: Install LAST
+  apt:
+    name: last-align
+    state: latest
+
+- name: Download ARGANNOT LAST db
+  get_url:
+    url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/arg_annot_db.tar.gz
+    dest: /home/ubuntu/
+    mode: '0777'
+
+- name: Extract ARGANNOT LAST db from archive
+  unarchive:
+    src: /home/ubuntu/arg_annot_db.tar.gz
+    dest: /home/ubuntu/
+    remote_src: yes
+  become_user: ubuntu
+
+- name: Download Resfinder LAST db
+  get_url:
+    url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/resfinderdb.tar.gz
+    dest: /home/ubuntu/
+    mode: '0777'
+
+- name: Extract Resfinder LAST db from archive
+  unarchive:
+    src: /home/ubuntu/resfinderdb.tar.gz
+    dest: /home/ubuntu/
+    remote_src: yes
+  become_user: ubuntu
+
+- name: Download AMRFinder LAST db
+  get_url:
+    url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/AMRdb.tar.gz
+    dest: /home/ubuntu/
+    mode: '0777'
+
+- name: Extract AMRFinder LAST db from archive
+  unarchive:
+    src: /home/ubuntu/AMRdb.tar.gz
+    dest: /home/ubuntu/
+    remote_src: yes
+  become_user: ubuntu
