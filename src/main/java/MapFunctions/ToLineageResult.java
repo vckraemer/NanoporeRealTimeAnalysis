@@ -16,6 +16,7 @@ public class ToLineageResult implements Function<String, LineageResult> {
         String genus = "";
         String species = "";
         String subspecies = "";
+        String speciesgroup = "";
 
 //        String[] fields = s.split("\t");
 //        if(fields.length==13){
@@ -46,7 +47,7 @@ public class ToLineageResult implements Function<String, LineageResult> {
             else if(field.contains("class")){
                 tclass = field.split("_")[0];
             }
-            else if(field.contains("species") && !field.contains("subspecies")){
+            else if(field.contains("species") && !field.contains("subspecies") && !field.contains("species group")){
                 species = field.split("_")[0];
             }
             else if(field.contains("order")){
@@ -55,10 +56,13 @@ public class ToLineageResult implements Function<String, LineageResult> {
             else if(field.contains("subspecies")){
                 subspecies = field.split("_")[0];
             }
+            else if(field.contains("species group")){
+                speciesgroup = field.split("_")[0];
+            }
         }
 
             if (!fields[0].equals("")) {
-                return new LineageResult(fields[0], superkingdom, phylum, tclass, order, family, genus, species, subspecies);
+                return new LineageResult(fields[0], superkingdom, phylum, tclass, order, family, genus, species, subspecies, speciesgroup);
             } else {
                 return null;
             }

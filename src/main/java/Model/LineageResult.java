@@ -16,24 +16,25 @@ public class LineageResult implements Serializable {
     private String genus;
     private String species;
     private String subspecies;
+    private String speciesgroup;
     private Date lineageSaveTime;
 
-    public LineageResult(String id, String taxId, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies) {
-        this.id = id;
-        readId = id.split("_")[0];
-        this.taxnum = taxId;
-        this.superkingdom = superkingdom;
-        this.phylum = phylum;
-        this.tclass = tclass;
-        this.order = order;
-        this.family = family;
-        this.genus = genus;
-        this.species = species;
-        this.subspecies = subspecies;
-        lineageSaveTime = new Date();
-    }
+//    public LineageResult(String id, String taxId, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies) {
+//        this.id = id;
+//        readId = id.split("_")[0];
+//        this.taxnum = taxId;
+//        this.superkingdom = superkingdom;
+//        this.phylum = phylum;
+//        this.tclass = tclass;
+//        this.order = order;
+//        this.family = family;
+//        this.genus = genus;
+//        this.species = species;
+//        this.subspecies = subspecies;
+//        lineageSaveTime = new Date();
+//    }
 
-    public LineageResult(String id, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies) {
+    public LineageResult(String id, String superkingdom, String phylum, String tclass, String order, String family, String genus, String species, String subspecies, String speciesgroup) {
         this.id = id;
         readId = id.split("_")[0];
         this.taxnum = id.split("_")[id.split("_").length-1];
@@ -45,6 +46,7 @@ public class LineageResult implements Serializable {
         this.genus = genus;
         this.species = species;
         this.subspecies = subspecies;
+        this.speciesgroup = speciesgroup;
         lineageSaveTime = new Date();
     }
 
@@ -142,5 +144,13 @@ public class LineageResult implements Serializable {
 
     public void setReadId(String readId) {
         this.readId = readId;
+    }
+
+    public String getSpeciesgroup() {
+        return speciesgroup;
+    }
+
+    public void setSpeciesgroup(String speciesgroup) {
+        this.speciesgroup = speciesgroup;
     }
 }
