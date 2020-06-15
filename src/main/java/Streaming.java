@@ -82,7 +82,7 @@ public class Streaming {
         savedReads.context().sparkContext().setLocalProperty("spark.scheduler.pool", "fair_pool");
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge(centrifugeDatabasePath));
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
-        endResult.context().sparkContext().setLocalProperty("spark.scheduler.pool", "a_different_pool");
+        //endResult.context().sparkContext().setLocalProperty("spark.scheduler.pool", "a_different_pool");
         JavaDStream<LineageResult> lineage = endResult.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults");
 
