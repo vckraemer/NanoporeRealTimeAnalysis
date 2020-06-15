@@ -64,6 +64,7 @@ public class Streaming {
         conf.set("es.port", esPort);
         conf.set("es.net.http.auth.user", "");
         conf.set("es.net.http.auth.pass", "");
+        conf.set("es.batch.size.entries", "4000");
         conf.set("es.resource", esIndexPrefix+"sparkstreaming");
         conf.set("es.nodes.wan.only", "true");
 
