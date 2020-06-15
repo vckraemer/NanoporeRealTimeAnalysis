@@ -32,28 +32,28 @@ public class ToLineageResult implements Function<String, LineageResult> {
 
         for (String field:fields) {
             if(field.contains("superkingdom")){
-                superkingdom = field.split("_")[1];
+                superkingdom = field.split("_")[0];
             }
             else if(field.contains("family")){
-                family = field.split("_")[1];
+                family = field.split("_")[0];
             }
             else if(field.contains("genus")){
-                genus = field.split("_")[1];
+                genus = field.split("_")[0];
             }
             else if(field.contains("phylum")){
-                phylum = field.split("_")[1];
+                phylum = field.split("_")[0];
             }
             else if(field.contains("class")){
-                tclass = field.split("_")[1];
+                tclass = field.split("_")[0];
             }
             else if(field.contains("species")){
-                species = field.split("_")[1];
+                species = field.split("_")[0];
             }
             else if(field.contains("order")){
-                order = field.split("_")[1];
+                order = field.split("_")[0];
             }
             else if(field.contains("subspecies")){
-                subspecies = field.split("_")[1];
+                subspecies = field.split("_")[0];
             }
         }
 
