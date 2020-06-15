@@ -59,7 +59,7 @@ public class Streaming {
         }
 
         SparkConf conf = new SparkConf().setAppName("fileStreaming");
-        conf.set("spark.scheduler.mode", "FAIR")
+        conf.set("spark.scheduler.mode", "FAIR");
         conf.set("es.index.auto.create", "true");
         conf.set("es.nodes", esIp);
         conf.set("es.port", esPort);
