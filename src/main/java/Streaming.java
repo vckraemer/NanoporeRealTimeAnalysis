@@ -76,11 +76,13 @@ public class Streaming {
 
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
 
-        ssc.sparkContext().setLocalProperty("spark.scheduker.pool", "fair_pool");
+        savedReads.context().sparkContext().setLocalProperty("spark.scheduker.pool", "fair_pool");
+
         JavaDStream<LastResult> lastResults = savedReads.transform(new PipeToLast(lastDatabase)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults", ImmutableMap.of("es.mapping.id","id"));
 
-        ssc.sparkContext().setLocalProperty("spark.scheduker.pool", "a_different_pool");
+
+        savedReads.context().sparkContext().setLocalProperty("spark.scheduker.pool", "a_different_pool");
         JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge(centrifugeDatabasePath));
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
         //JavaEsSparkStreaming.saveToEs(endResult, esIndexPrefix+"centrifugeresults");
