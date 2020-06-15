@@ -14,4 +14,4 @@ for key in lineage_dict:
         lineage = ncbi.get_lineage(lineage_dict[key])
         names = ncbi.get_taxid_translator(lineage)
         lineagenames = '|'.join(str(x) for x in names.values())
-        print (key +'\t'+ lineagenames)
+        print (key +'|'+ lineagenames)

@@ -85,7 +85,10 @@ public class Streaming {
         JavaDStream<CentrifugeResult> savedResults = endResult.cache();
         JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");
 
-        JavaDStream<LineageResult> lineage = savedResults.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
+//        JavaDStream<LineageResult> lineage = savedResults.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
+//        JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults");
+
+        JavaDStream<LineageResult> lineage = savedResults.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToPythonLineage()).map(new ToLineageResult()).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults");
 
         //JavaDStream<String> blastResults = savedReads.transform(new PipeToBlast()).map(new GetBlastResultJsonSingleReport()).filter(x -> x!=null);
