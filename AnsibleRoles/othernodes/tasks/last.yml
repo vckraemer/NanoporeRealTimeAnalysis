@@ -10,7 +10,7 @@
 
 - name: Download ARGANNOT LAST db
   get_url:
-    url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/arg_annot_db.tar.gz
+    url: https://drive.google.com/file/d/151E0pdkMe_ewoo82KQHOVIHt7iNXto_Y/view?usp=sharing
     dest: /home/ubuntu/
     mode: '0777'
 
@@ -23,7 +23,7 @@
 
 - name: Download Resfinder LAST db
   get_url:
-    url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/resfinderdb.tar.gz
+    url: https://drive.google.com/file/d/1-Sf4qjzchbBaxRifEoZlgVvDGWcibSRj/view?usp=sharing
     dest: /home/ubuntu/
     mode: '0777'
 
@@ -36,7 +36,7 @@
 
 - name: Download AMRFinder LAST db
   get_url:
-    url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/AMRdb.tar.gz
+    url: https://drive.google.com/file/d/1Y0TwKLSm3m71Q_gNQn8CFc-OONd8_e5a/view?usp=sharing
     dest: /home/ubuntu/
     mode: '0777'
 

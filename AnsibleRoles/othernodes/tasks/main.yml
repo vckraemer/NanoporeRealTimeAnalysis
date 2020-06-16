@@ -11,9 +11,9 @@
 
 - name: Make tmp directory
   file:
-      path: /mnt/tmp_results
-      state: directory
-      mode: 0777
+    path: /mnt/tmp_results
+    state: directory
+    mode: 0777
   become_user: ubuntu
 
 - name: Start Spark Worker
@@ -49,16 +49,17 @@
     mode: '0777'
   become_user: ubuntu
 
+
 - name: Make etetoolkit directory
   file:
-      path: /home/ubuntu/.etetoolkit
-      state: directory
-      mode: 0777
+    path: /home/ubuntu/.etetoolkit
+    state: directory
+    mode: 0777
   become_user: ubuntu
 
 - name: Download taxa.tar.gz
   get_url:
-    url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/taxa.tar.gz
+    url: https://drive.google.com/file/d/1OUvEROGjKyKVtjtj5-3e82A3chu3rBh_/view?usp=sharing
     dest: /home/ubuntu/
     mode: '0777'
   become_user: ubuntu
@@ -72,7 +73,7 @@
 
 - name: Download taxatraverse.tar.gz
   get_url:
-    url:     https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/taxatraverse.tar.gz
+    url:     https://drive.google.com/file/d/1js98XpH1Xu8r09P3VOq3JmottqXSnsai/view?usp=sharing
     dest: /home/ubuntu/
     mode: '0777'
   become_user: ubuntu
