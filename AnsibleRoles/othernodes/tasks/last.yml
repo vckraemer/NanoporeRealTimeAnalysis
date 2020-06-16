@@ -3,6 +3,11 @@
     name: last-align
     state: latest
 
+- name: Install LAST
+  apt:
+    name: unzip
+    state: latest
+
 - name: Download ARGANNOT LAST db
   get_url:
     url: https://github.com/vckraemer/NanoporeRealTimeAnalysis/raw/master/databases/arg_annot_db.tar.gz
