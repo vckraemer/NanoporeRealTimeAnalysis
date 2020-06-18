@@ -58,11 +58,7 @@
   become_user: ubuntu
 
 - name: Download taxa.tar.gz
-  get_url:
-    url: https://drive.google.com/file/d/1OUvEROGjKyKVtjtj5-3e82A3chu3rBh_/view?usp=sharing
-    dest: /home/ubuntu/
-    mode: '0777'
-  become_user: ubuntu
+  shell: wget -P /home/ubuntu/ -O taxa.tar.gz https://uni-bielefeld.sciebo.de/s/pEFN2jwrUnfHgpY/download
 
 - name: Extract taxa.tar.gz
   unarchive:
@@ -71,12 +67,8 @@
     remote_src: yes
   become_user: ubuntu
 
-- name: Download taxatraverse.tar.gz
-  get_url:
-    url:     https://drive.google.com/file/d/1js98XpH1Xu8r09P3VOq3JmottqXSnsai/view?usp=sharing
-    dest: /home/ubuntu/
-    mode: '0777'
-  become_user: ubuntu
+- name: Download taxa.tar.gz
+  shell: wget -P /home/ubuntu/ -O taxatraverse.tar.gz https://uni-bielefeld.sciebo.de/s/ixj76Az5uxuwuFb/download
 
 - name: Extract taxatraverse.tar.gz
   unarchive:

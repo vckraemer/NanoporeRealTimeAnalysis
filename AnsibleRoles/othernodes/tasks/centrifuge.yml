@@ -1,7 +1,27 @@
-- name: Install Centrifuge
-  apt:
-    name: centrifuge
-    state: latest
+- name: Make git directory
+  file:
+    path: /home/ubuntu/centrifuge
+    state: directory
+  become_user: ubuntu
+
+- name: Checkout Github repo centrifuge
+  git:
+    repo: 'https://github.com/infphilo/centrifuge'
+    dest: /home/ubuntu/centrifuge
+  become_user: ubuntu
+
+- name: Build 'default' target
+  shell:
+    cmd: make CFLAGS='-DBOWTIE_PTHREADS=1'
+    chdir: /home/ubuntu/centrifuge
+
+
+- name: Build 'install' target with extra arguments
+  make:
+    chdir: /home/ubuntu/centrifuge
+    target: install
+    params:
+      prefix: /usr/local
 
 - name: Copy file with owner and permissions
   copy:
@@ -18,9 +38,9 @@
 
 - name: Make Centrifuge p+h+v.tar.gz index directory
   file:
-      path: /mnt/p+h+v/
-      state: directory
-      mode: 0777
+    path: /mnt/p+h+v/
+    state: directory
+    mode: 0777
   become_user: ubuntu
 
 - name: Extract Centrifuge p+h+v index data from archive

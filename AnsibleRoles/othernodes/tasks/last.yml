@@ -9,10 +9,7 @@
     state: latest
 
 - name: Download ARGANNOT LAST db
-  get_url:
-    url: https://drive.google.com/file/d/151E0pdkMe_ewoo82KQHOVIHt7iNXto_Y/view?usp=sharing
-    dest: /home/ubuntu/
-    mode: '0777'
+  shell: wget -P /home/ubuntu/ -O arg_annot_db.tar.gz https://uni-bielefeld.sciebo.de/s/zjeWBhdbyVHMVPI/download
 
 - name: Extract ARGANNOT LAST db from archive
   unarchive:
@@ -21,11 +18,8 @@
     remote_src: yes
   become_user: ubuntu
 
-- name: Download Resfinder LAST db
-  get_url:
-    url: https://drive.google.com/file/d/1-Sf4qjzchbBaxRifEoZlgVvDGWcibSRj/view?usp=sharing
-    dest: /home/ubuntu/
-    mode: '0777'
+- name: Download ARGANNOT LAST db
+  shell: wget -P /home/ubuntu/ -O resfinderdb.tar.gz https://uni-bielefeld.sciebo.de/s/OGIrQkW7LP4mQFS/download
 
 - name: Extract Resfinder LAST db from archive
   unarchive:
@@ -34,11 +28,8 @@
     remote_src: yes
   become_user: ubuntu
 
-- name: Download AMRFinder LAST db
-  get_url:
-    url: https://drive.google.com/file/d/1Y0TwKLSm3m71Q_gNQn8CFc-OONd8_e5a/view?usp=sharing
-    dest: /home/ubuntu/
-    mode: '0777'
+- name: Download ARGANNOT LAST db
+  shell: wget -P /home/ubuntu/ -O AMRdb.tar.gz https://uni-bielefeld.sciebo.de/s/lS4UYxyLDVOeWfC/download
 
 - name: Extract AMRFinder LAST db from archive
   unarchive:
