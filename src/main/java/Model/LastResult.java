@@ -88,9 +88,9 @@ public class LastResult implements Serializable {
             String[] refParts = referenceName.split(":");
             geneName = refParts[0].split("\\)")[1];
             geneClass = refParts[0].split("\\)")[0].substring(1);
-            accessionNumber = refParts[1];
-            geneLocation = refParts[2];
-            geneSize = refParts[3];
+            //accessionNumber = refParts[1];
+            //geneLocation = refParts[2];
+            //geneSize = refParts[3];
         }else if (database.equals("AMRFinder")){
             String[] refParts = referenceName.split("\\|");
             proteinGI = refParts[0];
