@@ -21,4 +21,7 @@ for key in lineage_dict:
                 lineagenames = '|'.join(str(names[x])+'_'+str(ncbi.get_rank([x])[x]) for x in names)
                 print (key +'|'+ lineagenames)
             except:
+                print (key+'|unclassified')
                 pass
+        else:
+            print (key+'|unclassified')
