@@ -83,13 +83,13 @@ public class Streaming {
         JavaPairInputDStream<LongWritable, Text> fastqRDD =  ssc.fileStream(folderPath, LongWritable.class, Text.class, FastqInputFormat.class);
         JavaDStream<Read> reads = fastqRDD.map(Tuple2::_2).map(new TextToString()).map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
 
-        JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
+        JavaDStream<String> savedReads = reads.map(new ToFasta()).repartition(repartitioningValue).cache();
+        savedReads.context().sparkContext().setLocalProperty("spark.scheduler.pool", "fair_pool");
 
-        JavaDStream<LastResult> lastResults = savedReads.repartition(repartitioningValue).transform(new PipeToLast(lastDatabase)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
+        JavaDStream<LastResult> lastResults = savedReads.transform(new PipeToLast(lastDatabase)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults", ImmutableMap.of("es.mapping.id","id"));
 
-        savedReads.context().sparkContext().setLocalProperty("spark.scheduler.pool", "fair_pool");
-        JavaDStream<String> centrifugeResults = savedReads.repartition(2).transform(new PipeToCentrifuge(centrifugeDatabasePath));
+        JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge(centrifugeDatabasePath));
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null);
         JavaDStream<CentrifugeResult> savedResults = endResult.cache();
         JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");
