@@ -21,7 +21,9 @@ public class PipeToCentrifuge implements Function<JavaRDD<String>, JavaRDD<Strin
         String[] debugParts = debug.split("\\|");
         String path = debugParts[debugParts.length-1].split(" ")[2].replace("file:", "");
         String[] pathParts = path.split("/");
-        String filename = pathParts[pathParts.length-1] + LocalDate.now().toString();
+        String filename = pathParts[pathParts.length-1] + TaskContext.getPartitionId();
+
+        System.out.println(TaskContext.getPartitionId());
 
         //-q fastq input -f fasta input
         String centrifugeCall = "bash /home/ubuntu/centrifugeWrapper.sh " + filename + " " + selectedDatabase;
