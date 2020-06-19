@@ -68,7 +68,7 @@ public class Streaming {
         conf.set("es.batch.size.entries", "4000");
         conf.set("es.resource", esIndexPrefix+"sparkstreaming");
         conf.set("es.nodes.wan.only", "true");
-        conf.set("spark.hadoop.mapred.max.split.size","1000000");
+        conf.set("mapred.max.split.size","1000000");
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(1000));
 
