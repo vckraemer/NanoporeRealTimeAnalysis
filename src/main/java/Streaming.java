@@ -90,14 +90,14 @@ public class Streaming {
         JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults", ImmutableMap.of("es.mapping.id","id"));
 
         JavaDStream<String> centrifugeResults = savedReads.repartition(repartitioningValue).transform(new PipeToCentrifuge(centrifugeDatabasePath));
-        JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null);
-        JavaDStream<CentrifugeResult> savedResults = endResult.cache();
-        JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");
+        JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
+       // JavaDStream<CentrifugeResult> savedResults = endResult.cache();
+        //JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");
 
 //        JavaDStream<LineageResult> lineage = savedResults.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
 //        JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults");
 
-        JavaDStream<LineageResult> lineage = savedResults.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToPythonLineage()).map(new ToLineageResult()).filter(x -> x!=null);
+        JavaDStream<LineageResult> lineage = endResult.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToPythonLineage()).map(new ToLineageResult()).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults");
 
         //JavaDStream<String> blastResults = savedReads.transform(new PipeToBlast()).map(new GetBlastResultJsonSingleReport()).filter(x -> x!=null);
