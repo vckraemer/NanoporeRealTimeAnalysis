@@ -68,9 +68,9 @@ public class Streaming {
         conf.set("es.batch.size.entries", "4000");
         conf.set("es.resource", esIndexPrefix+"sparkstreaming");
         conf.set("es.nodes.wan.only", "true");
-        conf.set("spark.hadoop.mapred.max.split.size","100000");
+        conf.set("spark.hadoop.mapred.max.split.size","1000000");
 
-        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(10000));
+        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(1000));
 
         JavaPairInputDStream<LongWritable, Text> fastqRDD =  ssc.fileStream(folderPath, LongWritable.class, Text.class, FastqInputFormat.class);
         JavaDStream<Read> reads = fastqRDD.map(Tuple2::_2).map(new TextToString()).map(new ToReadObject()).filter(x -> x!=null).map(new CalculateGCContent()).transform(new SaveToElastic(esIndexPrefix));
