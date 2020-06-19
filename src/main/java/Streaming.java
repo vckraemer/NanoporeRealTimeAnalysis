@@ -12,12 +12,15 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.elasticsearch.spark.streaming.api.java.JavaEsSparkStreaming;
 import org.spark_project.guava.collect.ImmutableMap;
 import scala.Tuple2;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 
 public class Streaming {
 
     public static void main(String[] args) throws InterruptedException {
+
+        IntegerInkrement count = new IntegerInkrement(0);
 
         String esIp = "localhost";
         String esPort = "9200";
@@ -89,7 +92,7 @@ public class Streaming {
         JavaDStream<LastResult> lastResults = savedReads.repartition(repartitioningValue).transform(new PipeToLast(lastDatabase)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults", ImmutableMap.of("es.mapping.id","id"));
 
-        JavaDStream<String> centrifugeResults = savedReads. repartition(repartitioningValue).transform(new PipeToCentrifuge(centrifugeDatabasePath));
+        JavaDStream<String> centrifugeResults = savedReads. repartition(repartitioningValue).transform(new PipeToCentrifuge(centrifugeDatabasePath, count));
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null);
         JavaDStream<CentrifugeResult> savedResults = endResult.cache();
         JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");
@@ -109,4 +112,3 @@ public class Streaming {
     }
 
 }
-
