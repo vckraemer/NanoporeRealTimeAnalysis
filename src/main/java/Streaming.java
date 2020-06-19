@@ -92,7 +92,7 @@ public class Streaming {
         JavaDStream<LastResult> lastResults = savedReads.repartition(repartitioningValue).transform(new PipeToLast(lastDatabase)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults", ImmutableMap.of("es.mapping.id","id"));
 
-        JavaDStream<String> centrifugeResults = savedReads. repartition(repartitioningValue).transform(new PipeToCentrifuge(centrifugeDatabasePath, count));
+        JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge(centrifugeDatabasePath, count));
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null);
         JavaDStream<CentrifugeResult> savedResults = endResult.cache();
         JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");
