@@ -25,6 +25,7 @@ public class Streaming {
         String folderPath = "";
         String lastDatabase= "";
         String centrifugeDatabasePath = "";
+        int repartitioningValue = 1;
 
         if(args.length >=2 && args.length % 2 == 0){
             int i = 0;
@@ -42,6 +43,13 @@ public class Streaming {
                     lastDatabase = args[i+1];
                 } else if(args[i].equals("-cidx")){
                     centrifugeDatabasePath = args[i+1];
+                } else if(args[i].equals("-np")){
+                    try {
+                        repartitioningValue = Integer.parseInt(args[i+1]);
+                    }catch (Exception e){
+                        System.out.println("-np Argument must be an Integer value!");
+                    }
+
                 }
                 i++;
             }
@@ -68,7 +76,6 @@ public class Streaming {
         conf.set("es.batch.size.entries", "4000");
         conf.set("es.resource", esIndexPrefix+"sparkstreaming");
         conf.set("es.nodes.wan.only", "true");
-        conf.set("mapred.max.split.size","1000000");
 
         JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(1000));
 
@@ -77,11 +84,11 @@ public class Streaming {
 
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
 
-        JavaDStream<LastResult> lastResults = savedReads.repartition(4).transform(new PipeToLast(lastDatabase)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
+        JavaDStream<LastResult> lastResults = savedReads.repartition(repartitioningValue).transform(new PipeToLast(lastDatabase)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults", ImmutableMap.of("es.mapping.id","id"));
 
         savedReads.context().sparkContext().setLocalProperty("spark.scheduler.pool", "fair_pool");
-        JavaDStream<String> centrifugeResults = savedReads.repartition(4).transform(new PipeToCentrifuge(centrifugeDatabasePath));
+        JavaDStream<String> centrifugeResults = savedReads.repartition(repartitioningValue).transform(new PipeToCentrifuge(centrifugeDatabasePath));
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null);
         JavaDStream<CentrifugeResult> savedResults = endResult.cache();
         JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");
