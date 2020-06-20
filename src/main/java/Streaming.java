@@ -29,6 +29,8 @@ public class Streaming {
         String lastDatabase= "";
         String centrifugeDatabasePath = "";
         int repartitioningValue = 1;
+        String lastThreads ="";
+        String centrifugeThreads ="";
 
         if(args.length >=2 && args.length % 2 == 0){
             int i = 0;
@@ -52,7 +54,10 @@ public class Streaming {
                     }catch (Exception e){
                         System.out.println("-np Argument must be an Integer value!");
                     }
-
+                } else if(args[i].equals("-lp")){
+                    lastThreads = args[i+1];
+                } else if(args[i].equals("-cp")){
+                    centrifugeThreads = args[i+1];
                 }
                 i++;
             }
@@ -89,10 +94,10 @@ public class Streaming {
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
         savedReads.context().sparkContext().setLocalProperty("spark.scheduler.pool", "fair_pool");
 
-        JavaDStream<LastResult> lastResults = savedReads.repartition(repartitioningValue).transform(new PipeToLast(lastDatabase)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
+        JavaDStream<LastResult> lastResults = savedReads.repartition(repartitioningValue).transform(new PipeToLast(lastDatabase, lastThreads)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults", ImmutableMap.of("es.mapping.id","id"));
 
-        JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge(centrifugeDatabasePath, count));
+        JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge(centrifugeDatabasePath, centrifugeThreads));
         JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null);
         JavaDStream<CentrifugeResult> savedResults = endResult.cache();
         JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");

@@ -2,6 +2,7 @@
 
 filename=$1
 dbpath=$2
+threads=$3
 savefile=$filename"reads.fasta"
 
 cd /mnt/tmp_results/ || { echo "Failure"; exit 1; }
@@ -11,9 +12,9 @@ while read LINE; do
 done
 
 if [ "$dbpath" == "provided" ]; then
-    centrifuge -f -k 1 -p 14 --mm -x /mnt/p+h+v/p+h+v "$savefile"
+    centrifuge -f -k 1 -p "$threads" --mm -x /mnt/p+h+v/p+h+v "$savefile"
 else
-    centrifuge -f -k 1 -p 14 --mm -x "$dbpath" "$savefile"
+    centrifuge -f -k 1 -p "$threads" --mm -x "$dbpath" "$savefile"
 fi
 
 

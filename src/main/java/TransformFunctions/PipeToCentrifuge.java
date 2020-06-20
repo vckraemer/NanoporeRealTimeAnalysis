@@ -11,12 +11,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PipeToCentrifuge implements Function<JavaRDD<String>, JavaRDD<String>> {
 
     private String selectedDatabase;
-    private int counter;
+    private String threads;
 
-    public PipeToCentrifuge(String database, IntegerInkrement i){
+    public PipeToCentrifuge(String database, String threads){
         selectedDatabase = database;
-        counter = i.ai;
-        i.ai = i.ai+1;
+        this.threads = threads;
     }
 
     @Override
@@ -26,12 +25,10 @@ public class PipeToCentrifuge implements Function<JavaRDD<String>, JavaRDD<Strin
         String[] debugParts = debug.split("\\|");
         String path = debugParts[debugParts.length-1].split(" ")[2].replace("file:", "");
         String[] pathParts = path.split("/");
-        String filename = pathParts[pathParts.length-1] + Thread.currentThread().getId();;
-
-        System.out.println(Thread.currentThread().getId());
+        String filename = pathParts[pathParts.length-1];
 
         //-q fastq input -f fasta input
-        String centrifugeCall = "bash /home/ubuntu/centrifugeWrapper.sh " + filename + " " + selectedDatabase;
+        String centrifugeCall = "bash /home/ubuntu/centrifugeWrapper.sh " + filename + " " + selectedDatabase + " " + threads;
         JavaRDD<String> pipeRDD = read.pipe(centrifugeCall);
         pipeRDD.collect();
         return pipeRDD;
