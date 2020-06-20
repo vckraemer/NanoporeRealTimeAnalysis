@@ -6,9 +6,9 @@
 
 - name: Make taxonomy db directory
   file:
-      path: /home/ubuntu/taxonomy/
-      state: directory
-      mode: 0777
+    path: /home/ubuntu/taxonomy/
+    state: directory
+    mode: 0777
   become_user: ubuntu
 
 - name: Extract Taxonomy data from archive

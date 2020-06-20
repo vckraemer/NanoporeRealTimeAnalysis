@@ -28,8 +28,8 @@
 
 - name: Make spark directory
   file:
-      path: /home/ubuntu/spark
-      state: directory
+    path: /home/ubuntu/spark
+    state: directory
   become_user: ubuntu
 
 - name: Extract Spark from archive
