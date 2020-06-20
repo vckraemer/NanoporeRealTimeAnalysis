@@ -18,7 +18,7 @@ public class SaveToElastic implements Function<JavaRDD<Read>, JavaRDD<Read>> {
     @Override
     public JavaRDD<Read> call(JavaRDD<Read> readRDD) throws Exception {
 
-        JavaEsSpark.saveToEs(readRDD, esIndexPrefix+"sparkstreaming", ImmutableMap.of("es.mapping.id","id","es.mapping.exclude","quality","es.mapping.exclude","fasta"));
+        JavaEsSpark.saveToEs(readRDD, esIndexPrefix+"sparkstreaming", ImmutableMap.of("es.mapping.id","id","es.mapping.exclude","quality, fasta"));
         return readRDD;
     }
 }
