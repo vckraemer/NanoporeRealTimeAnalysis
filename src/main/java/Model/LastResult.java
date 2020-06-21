@@ -86,7 +86,8 @@ public class LastResult implements Serializable {
 
         if (database.equals("ARGANNOT")){
             String[] refParts = referenceName.split(":");
-            geneName = refParts[0].split("\\)")[1];
+            int pos = refParts[0].indexOf("\\)");
+            geneName = refParts[0].substring(pos);
             geneClass = refParts[0].split("\\)")[0].substring(1);
             //accessionNumber = refParts[1];
             //geneLocation = refParts[2];
