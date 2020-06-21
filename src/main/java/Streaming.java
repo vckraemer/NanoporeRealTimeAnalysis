@@ -48,11 +48,11 @@ public class Streaming {
                     lastDatabase = args[i+1];
                 } else if(args[i].equals("-cidx")){
                     centrifugeDatabasePath = args[i+1];
-                } else if(args[i].equals("-np")){
+                } else if(args[i].equals("-rp")){
                     try {
                         repartitioningValue = Integer.parseInt(args[i+1]);
                     }catch (Exception e){
-                        System.out.println("-np Argument must be an Integer value!");
+                        System.out.println("-rp Argument must be an Integer value!");
                     }
                 } else if(args[i].equals("-lp")){
                     lastThreads = args[i+1];
