@@ -12,9 +12,9 @@ while read LINE; do
 done
 
 if [ "$dbpath" == "provided" ]; then
-    centrifuge -f -k 1 -p "$threads" -x /mnt/p+h+v/p+h+v "$savefile"
+    centrifuge -f -k 1 -p "$threads" --mm -x /mnt/p+h+v/p+h+v "$savefile"
 else
-    centrifuge -f -k 1 -p "$threads" -x "$dbpath" "$savefile"
+    centrifuge -f -k 1 -p "$threads" --mm -x "$dbpath" "$savefile"
 fi
 
 
