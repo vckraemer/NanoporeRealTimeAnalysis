@@ -94,16 +94,16 @@ public class Streaming {
         JavaDStream<String> savedReads = reads.map(new ToFasta()).cache();
         savedReads.context().sparkContext().setLocalProperty("spark.scheduler.pool", "fair_pool");
 
-        JavaDStream<LastResult> lastResults = savedReads.transform(new PipeToLast(lastDatabase, lastThreads)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
-        JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults", ImmutableMap.of("es.mapping.id","id"));
-
-        JavaDStream<String> centrifugeResults = savedReads.repartition(1).transform(new PipeToCentrifuge(centrifugeDatabasePath, centrifugeThreads));
-        JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null);
-        JavaDStream<CentrifugeResult> savedResults = endResult.cache();
-        JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");
+        JavaDStream<String> centrifugeResults = savedReads.transform(new PipeToCentrifuge(centrifugeDatabasePath, centrifugeThreads));
+        JavaDStream<CentrifugeResult> endResult = centrifugeResults.map(new ToCentrifugeResult()).filter(x -> x!=null).transform(new SaveCentrifugeResultsToElastic(esIndexPrefix));
+        //JavaDStream<CentrifugeResult> savedResults = endResult.cache();
+        //JavaEsSparkStreaming.saveToEs(savedResults, esIndexPrefix+"centrifugeresults");
 
         JavaDStream<LineageResult> lineage = endResult.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToPythonLineage()).map(new ToLineageResult()).filter(x -> x!=null);
         JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults");
+
+        JavaDStream<LastResult> lastResults = savedReads.transform(new PipeToLast(lastDatabase, lastThreads)).map(new ToLastResult(lastDatabase)).filter(x -> x!=null);
+        JavaEsSparkStreaming.saveToEs(lastResults, esIndexPrefix+"lastresults", ImmutableMap.of("es.mapping.id","id"));
 
         //JavaDStream<LineageResult> lineage = savedResults.map(new ToLineageInput()).filter(x -> x!=null).transform(new PipeToTaxonomy2Lineage()).map(new ToLineageResult()).filter(x -> x!=null);
         //JavaEsSparkStreaming.saveToEs(lineage, esIndexPrefix+"lineageresults");
