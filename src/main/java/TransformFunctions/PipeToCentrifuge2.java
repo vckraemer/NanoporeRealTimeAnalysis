@@ -17,7 +17,7 @@ public class PipeToCentrifuge2  implements Function<JavaRDD<String>, JavaRDD<Str
     public JavaRDD<String> call(JavaRDD<String> read) throws Exception {
 
         if(selectedDatabase.equals("provided")){
-            String centrifugeCall = " centrifuge  -k 1 -p "+threads+" --mm -x /mnt/p+h+v/p+h+v -U";
+            String centrifugeCall = " centrifuge  -k 1 -p "+threads+" --mm -x /mnt/p+h+v/p+h+v -U -";
             JavaRDD<String> pipeRDD = read.pipe(centrifugeCall);
             pipeRDD.collect();
             return pipeRDD;
