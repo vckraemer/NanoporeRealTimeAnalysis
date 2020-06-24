@@ -24,6 +24,7 @@ public class PipeToCentrifuge2  implements Function<JavaRDD<String>, JavaRDD<Str
         }else{
             String centrifugeCall = "centrifuge -k 1 -p "+threads+" --mm -x "+selectedDatabase+ "-U";
             JavaRDD<String> pipeRDD = read.pipe(centrifugeCall);
+            System.out.println(pipeRDD.toString());
             pipeRDD.collect();
             return pipeRDD;
         }
