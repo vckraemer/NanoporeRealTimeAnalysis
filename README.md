@@ -19,7 +19,7 @@ ansible-playbook -h playbook/hosts playbook/site.yml
 
 The Elasticsearch databse can be set up by following the steps in the documentation (https://www.elastic.co/guide/en/elasticsearch/reference/current/targz.html).
 Furthermore, Kibana must be initiated after the database setup is finished. The steps can also be found in the documentation (https://www.elastic.co/guide/en/kibana/current/targz.html).
-When Settingup Elasticsearch and Kibana 
+When Settingup Elasticsearch and Kibana, the IP-adress must be set to the adress reachable from another instance. By default, Elasticsearch uses 'localhost' as standard.  
 To use the Elasticsearch databse with the application, the instance must be in the same security group as the cluster or single machine. When enough resources are avaiable, it is possible to start the database on the same instance as the streaming application. 
 
 ## Start Application 
