@@ -19,8 +19,35 @@ ansible-playbook -h playbook/hosts playbook/site.yml
 
 The Elasticsearch databse can be set up by following the steps in the documentation (https://www.elastic.co/guide/en/elasticsearch/reference/current/targz.html).
 Furthermore, Kibana must be initiated after the database setup is finished. The steps can also be found in the documentation (https://www.elastic.co/guide/en/kibana/current/targz.html).
-When Settingup Elasticsearch and Kibana, the IP-adress must be set to the adress reachable from another instance. By default, Elasticsearch uses 'localhost' as standard.  
+ 
 To use the Elasticsearch databse with the application, the instance must be in the same security group as the cluster or single machine. When enough resources are avaiable, it is possible to start the database on the same instance as the streaming application. 
+
+When configuring the Elasticsearch instance, the following lines must be added in the 'elasticsearch.yml':
+```
+path.data: /path/to/data/folder
+
+path.logs: /path/to/log/folder
+
+network.host: IP Adress of instance
+
+http.port: 9200 (Elasticsearch default port)
+
+discovery.seed_hosts: ["(IP adress of instance)"]
+
+discovery.type: single-node (When only one instance is used for Elasticsearch)
+```
+When configuring the Kibana instance, the following lines must be added in the 'kibana.yml':
+```
+server.port: 5601 (Kibana default port)
+server.host: "localhost" (Default IP adress)
+elasticsearch.hosts: ["http://(IP adress of Elasticsearch Instance):9200"]
+```
+
+Pre-defined dashboards are avaiable in this repository, and can be importet with Kibana. In the Kibana Interface go to Management -> Saved Objects and chose Import. Then select the .ndjson of choice.
+
+Metagenomic_and_antibiotic_resistance_analysis.ndjson contains visualization for all three avaiable antibiotic resistance databses.
+
+Metagenomic_and_antibiotic_resistance_analysis_small.ndjson contains only a visualization for the AMRFinder database.
 
 ## Start Application 
 
