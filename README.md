@@ -39,7 +39,9 @@ discovery.type: single-node (When only one instance is used for Elasticsearch)
 When configuring the Kibana instance, the following lines must be added in the 'kibana.yml':
 ```
 server.port: 5601 (Kibana default port)
+
 server.host: "localhost" (Default IP adress)
+
 elasticsearch.hosts: ["http://(IP adress of Elasticsearch Instance):9200"]
 ```
 
@@ -56,40 +58,70 @@ After the setup with the provided ansible roles or playbook, the streaming appli
 Cluster Setup:
 ```
 ./spark/spark-2.4.4-bin-hadoop2.7/bin/spark-submit 
+
   --class "Streaming" (main class of the streaming application)
+  
   --master spark://MasterIP:PortOfSparkApplication (standard port is 7077)
+  
   --conf spark.executor.memory=availableRAM (e.g. 32g) 
+  
   --conf spark.driver.memory=availableRAM (e.g. 32g) 
+  
   --executor-cores numberOfAvailableCores (e.g. 14)
+  
   --conf spark.driver.maxResultSize=2g 
+  
   --conf spark.streaming.concurrentJobs=2 
+  
   --conf spark.default.parallelism=   (at least one time the number of avaiable cores, e.g. 14 for 14 cores) 
+  
   --conf spark.scheduler.allocation.file=fair_pools.xml (xml with defined schedular pools, default the in this repository provided schedular file with one FIFO schedular)
+  
   path/to/application/jar/npanalyse-1.0-SNAPSHOT-jar-with-dependencies.jar 
-      -ip ElasticsearchIP 
-      -port ElasticsearchPort
-      -prefix ElasticsearchIndexPrefix 
-      -f PathToMonitoredFolder (when using the provided ansible roles, a folder is created with the path /vol/spool/sequences)
-      -ldb AntibtioticResistanceDatabase 
-      -lp numberOfThreadsForLAST 
-      -cp numberOfThreadsForCentrifuge
+  
+    -ip ElasticsearchIP 
+  
+    -port ElasticsearchPort
+  
+    -prefix ElasticsearchIndexPrefix 
+  
+    -f PathToMonitoredFolder (when using the provided ansible roles, a folder is created with the path /vol/spool/sequences)
+  
+    -ldb AntibtioticResistanceDatabase 
+  
+    -lp numberOfThreadsForLAST 
+  
+    -cp numberOfThreadsForCentrifuge
 ```
 Single Instance Setup
 ```
 ./spark/spark-2.4.4-bin-hadoop2.7/bin/spark-submit 
-    --class "Streaming" (main class of the streaming application)
-    --master local[numberOfAvailableCores] 
-    --conf spark.driver.maxResultSize=2g 
-    --conf spark.scheduler.allocation.file=fair_pools.xml (xml with defined schedular pools, default the in this repository provided schedular file with one FIFO schedular)
-    NanoRealTimeAnalysis/target/npanalyse-1.0-SNAPSHOT-jar-with-dependencies.jar 
-      -ip ElasticsearchIP 
-      -port ElasticsearchPort
-      -prefix ElasticsearchIndexPrefix 
-      -f PathToMonitoredFolder (when using the provided ansible roles, a folder is created with the path /vol/spool/sequences)
-      -ldb AntibtioticResistanceDatabase 
-      -lp numberOfThreadsForLAST 
-      -cp numberOfThreadsForCentrifuge
+    
+  --class "Streaming" (main class of the streaming application)
+    
+  --master local[numberOfAvailableCores] 
+    
+  --conf spark.driver.maxResultSize=2g 
+    
+  --conf spark.scheduler.allocation.file=fair_pools.xml (xml with defined schedular pools, default the in this repository provided schedular file with one FIFO schedular)
+
+  path/to/application/jar/npanalyse-1.0-SNAPSHOT-jar-with-dependencies.jar 
+
+    -ip ElasticsearchIP 
+
+    -port ElasticsearchPort
+
+    -prefix ElasticsearchIndexPrefix 
+
+    -f PathToMonitoredFolder (when using the provided ansible roles, a folder is created with the path /vol/spool/sequences)
+
+    -ldb AntibtioticResistanceDatabase 
+
+    -lp numberOfThreadsForLAST 
+
+    -cp numberOfThreadsForCentrifuge
 ```
+
 Important notes:
 - When choosing a different folder for monitoring, it is important, that all nodes can access this folder with the FASTQ files, because of the fault tolerance mechanisms in Spark. When using Spark on a single machine, the folder is normally always accessible, depending on the permission settings of the folder.
 
