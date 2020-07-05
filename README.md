@@ -45,6 +45,11 @@ server.host: "localhost" (Default IP adress)
 elasticsearch.hosts: ["http://(IP adress of Elasticsearch Instance):9200"]
 ```
 
+Kibana can be accessed on a local computer by forwarding the port of to the Kibana interface:
+```
+ssh -i .ssh/cloudkey -L (port on local computer):localhost:5601 ubuntu@(Floating IP of OpenStack instance with Elasticsearch and Kibana)
+```
+
 Pre-defined dashboards are avaiable in this repository, and can be importet with Kibana. In the Kibana Interface go to Management -> Saved Objects and chose Import. Then select the .ndjson of choice.
 
 Metagenomic_and_antibiotic_resistance_analysis.ndjson contains visualization for all three avaiable antibiotic resistance databses.
