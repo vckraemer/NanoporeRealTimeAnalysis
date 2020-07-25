@@ -127,6 +127,9 @@ Single Instance Setup
     -cp numberOfThreadsForCentrifuge
 ```
 
+After starting the application, sequence files can be copied (e.g. by the movescript.sh in this repository) into the monitored folder to be analyzed.
+The application was not yet testet with monitoring directly the folder where the fastq files are saved by the MinKNOW software after basecalling.
+
 Important notes:
 - When choosing a different folder for monitoring, it is important, that all nodes can access this folder with the FASTQ files, because of the fault tolerance mechanisms in Spark. When using Spark on a single machine, the folder is normally always accessible, depending on the permission settings of the folder.
 
